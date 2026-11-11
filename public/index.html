@@ -1,0 +1,1222 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>SPBIM</title>
+<script>try{var t=JSON.parse(localStorage.getItem('bs.theme'));if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+/* ===================== TOKENS ===================== */
+:root{--bg:#0c0d10;--s1:#14161b;--s2:#1b1e25;--ln:#262a33;--lnh:#3a4050;--tx:#e8eaf0;--mu:#8b92a3;--ac:#8b3fe0;--ac2:#a78bfa;--ok:#34d399;--er:#f87171;--wa:#fbbf24;--in:#60a5fa;
+--g:linear-gradient(135deg,#f0643c,#8b3fe0 55%,#3f5cf2);--glass:#14161bcc;--card:#14161bcc;--th:#171a20;--sh:#0008;color-scheme:dark}
+[data-theme=light]{--bg:#f4f5f9;--s1:#fff;--s2:#eef0f5;--ln:#dfe2ea;--lnh:#c3c8d4;--tx:#161922;--mu:#5d6577;--ac2:#7c3aed;--glass:#fff;--card:#ffffffd9;--th:#f7f8fb;--sh:#0002;color-scheme:light}
+
+/* ===================== BASE ===================== */
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 Sora,system-ui,-apple-system,"Segoe UI",sans-serif;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.hide{display:none!important}
+
+/* fundo animado: movido por transform (GPU), sem repintar a tela a cada quadro */
+body:before,body:after{content:"";position:fixed;left:0;right:0;z-index:0;pointer-events:none;background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADwCAYAAABFcSteAAAOX0lEQVR42u3dW4xdV33H8e9aa+99rjPjudkeX2Zix7mapknIDVAKFApICBTUUqS2VGr70pY25aVSBRKVQH2rioT6gFBRKxXoJY2KQgmFVlXTNCQKSSB1ksGJ49hz8cyZ6zlzZs6csy9r9WHs1KDGqZMxHQ+/jzTSPFhj6b/2b6/r3htERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE5I1wKsFPQBRjLNhybLCAsxAlEAylEOPxqtEOZVSC7a6oAWuhKACoVzDVKmYgIqp5yksZnWaPopuakBNjjCHkKRC2WiOohOpBdrvzF3lk4YY+KncPcNPdVX75LRG/ddAyGEPLeDY2TVHgAtZACGAjCOpMFJBd2WNcdOuvkjBCHN1ii/G7Snz0thIfvwluPeBxg5aJYcfdIwk37kloeRvWiCmcwwT/ascjCsguEccQRzgKEmAI4ptx174N90tHTX7fAcehQUe16gkuBwdJJWbvUJlDI5b396dMxAXtEGiuZmReQyzNQa7uW4rbCkVuKeWBzPRIsAwHUz6IvWEIc88hwrG9UBSkzsah6mLSZsJkJ+EH1nPNQM5dSU6tEnBxRn0qp/VicC83QuU/m7hnN+h126Qh1+RdAbnqRBEkCbYbGPBlM0a9bxR/vEZ6+xD+2j2Eoo4ZMPhihXRxlt6/N1z+/HLCSsdR2BwznJqBw56fHSbcO2jMNUVwzTXqQ23qdgWWptj4SjvJf7iStjvqUDTEuvp6EO9xRcE4+4aPM/RHR6i/fQ/xcBlMhBtpYRbO4L9xEvvgS/iXXgpFewN8NyOs5YRGYHMRd3YRnlw2zOaUx8rUqglJLYO8Te/Ge9/7nruTKHm+sdzYUEgUkKtqQm6ynGEG7bUMfeQw/bcNkIyl+HyN7HSD7IFn2Hhw0qy/OE3abVMET6DwUIT/mcp3CTQhXzVmpo19qos7neL7copqhnFzU9P1Wr2erKw2nw+YELT+qyHWVREQ5yDPOcah0VvY/9lRqkVG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RERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERHar/wbB9PK4IVANMAAAAABJRU5ErkJggg==) 0 0/200px 240px;will-change:transform}
+body:before{top:0;bottom:-240px;opacity:.22;animation:bgu 40s linear infinite}
+body:after{top:-240px;bottom:0;background-position:100px 0;opacity:.15;animation:bgd 55s linear infinite}
+@keyframes bgu{to{transform:translateY(-240px)}}
+@keyframes bgd{to{transform:translateY(240px)}}
+[data-theme=light] body:before,[data-theme=light] body:after{display:none}
+#auth,#app{position:relative;z-index:1}
+
+/* ===================== CONTROLES ===================== */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--ln);background:var(--s2);border-radius:9px;padding:8px 14px;white-space:nowrap;transition:border-color .15s,background .15s,transform .15s,filter .15s}
+.btn:hover{border-color:var(--lnh);transform:translateY(-1px)}
+.btn:active{transform:scale(.95)}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn.p{background:var(--g);border-color:transparent;font-weight:600;color:#fff}
+.btn.p:hover{filter:brightness(1.15)}
+.btn.dz{background:var(--er);border-color:var(--er);font-weight:600;color:#fff}
+.btn.i{padding:7px}
+.btn.d:hover{border-color:var(--er);color:var(--er)}
+.btn.on{border-color:var(--ac);background:#8b3fe01f}
+.btn.load:after{content:"";width:14px;height:14px;border:2px solid #fff6;border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{rotate:360deg}}
+input,select,textarea{background:var(--s1);border:1px solid var(--ln);border-radius:9px;padding:9px 12px;width:100%;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px #8b3fe022;outline:0}
+.lnk{background:0;border:0;color:var(--ac2);padding:0}.lnk:hover{text-decoration:underline}
+.fld{margin-bottom:14px;position:relative}
+.fld label{display:block;font-size:12px;color:var(--mu);margin-bottom:5px;transition:color .15s}
+.fld:focus-within label{color:var(--ac2)}
+.fld .eye{position:absolute;right:6px;top:25px;border:0;background:0;color:var(--mu);padding:6px}
+.fld.bad input{border-color:var(--er)}
+.err{color:var(--er);font-size:12px;margin-top:4px}
+.msg{padding:10px 12px;border-radius:9px;margin-bottom:14px;font-size:13px}.msg.e{background:#f871711a;color:var(--er)}.msg.o{background:#34d3991a;color:var(--ok)}
+.chk{display:inline-flex;align-items:center;gap:6px;color:var(--mu);font-size:13px;cursor:pointer}.chk input{width:auto}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+.hint{color:var(--mu);font-size:12px;margin:10px 0 0}
+
+/* ===================== LOGIN ===================== */
+#auth{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{position:relative;overflow:hidden;padding:56px;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(900px 500px at 20% 110%,#8b3fe024,transparent);border-right:1px solid var(--ln)}
+[data-theme=light] .hero{background:radial-gradient(900px 500px at 20% 110%,#8b3fe01a,transparent)}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:44px 44px;opacity:.35;-webkit-mask:linear-gradient(#000,transparent 85%);mask:linear-gradient(#000,transparent 85%)}
+.hero:after{content:"";position:absolute;left:0;right:0;top:0;height:120px;background:linear-gradient(transparent,#8b3fe033,transparent);animation:scan 7s linear infinite;will-change:transform}
+@keyframes scan{from{transform:translateY(-120px)}to{transform:translateY(100vh)}}
+.hero>*{position:relative}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
+.lm{height:32px;width:auto;filter:drop-shadow(0 0 14px #8b3fe055)}
+.hero h1{font-size:38px;line-height:1.15;margin:0 0 14px;max-width:440px;letter-spacing:-.02em}
+.hero p{color:var(--mu);max-width:400px;margin:0}
+.nums{display:flex;gap:36px}.nums b{display:block;font-size:30px;letter-spacing:-.02em}.nums span{color:var(--mu);font-size:12px}
+.nums b,.tile b{background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}
+.formside{display:grid;place-items:center;padding:28px}
+.card{position:relative;width:100%;max-width:380px;background:var(--card);backdrop-filter:blur(12px);border:1px solid var(--ln);border-radius:16px;padding:30px;box-shadow:0 20px 60px var(--sh)}
+.card:before{content:"";position:absolute;left:24px;right:24px;top:-1px;height:2px;border-radius:2px;background:var(--g)}
+.card h2{margin:0 0 4px;font-size:22px}.card .sub{color:var(--mu);margin:0 0 22px}
+.card .btn.p{width:100%;justify-content:center;padding:11px}
+.row{display:flex;justify-content:space-between;margin-top:16px;font-size:13px;color:var(--mu)}
+.pane{animation:in .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+
+/* ===================== LAYOUT ===================== */
+#app{display:grid;grid-template-columns:232px 1fr;min-height:100vh;transition:grid-template-columns .25s}
+#app.col{grid-template-columns:68px 1fr}
+aside{position:sticky;top:0;height:100vh;background:var(--s1);border-right:1px solid var(--ln);padding:16px 12px;display:flex;flex-direction:column;gap:4px;z-index:5}
+aside .logo{padding:4px 6px 18px}
+.nv{position:relative;display:flex;align-items:center;gap:12px;padding:10px;border-radius:9px;border:0;background:0;color:var(--mu);width:100%;text-align:left;white-space:nowrap;transition:background .15s,color .15s}
+.nv:hover{background:var(--s2);color:var(--tx)}
+.nv.on{background:linear-gradient(90deg,#8b3fe033,#3f5cf20d);color:var(--tx)}
+.nv.on:before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:3px;background:var(--g)}
+.nv svg{transition:transform .25s}.nv:hover svg{transform:scale(1.18) rotate(-6deg)}.nv.on svg{color:var(--ac2)}
+.nv:after{content:attr(data-tip);position:absolute;left:calc(100% + 12px);top:50%;transform:translate(-6px,-50%);background:var(--s2);color:var(--tx);border:1px solid var(--ln);padding:5px 10px;border-radius:8px;font-size:12px;white-space:nowrap;box-shadow:0 8px 24px #0006;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .15s,transform .15s;z-index:30}
+.nv:hover:after,.nv:focus-visible:after{opacity:1;visibility:visible;transform:translate(0,-50%);transition-delay:.4s}
+.nv:not([data-tip]):after{display:none}
+.nb{margin-left:auto;font-style:normal;font-size:11px;min-width:20px;text-align:center;padding:1px 6px;border-radius:10px;background:#f8717126;color:var(--er)}
+.col .nv span,.col .logo span,.col .who,.col .nb{display:none}
+.sp{flex:1}
+.usr{display:flex;align-items:center;gap:10px;padding:8px 4px;border-top:1px solid var(--ln);margin-top:6px}
+.col .usr{justify-content:center;padding:8px 0}
+.av{width:36px;height:36px;border-radius:50%;background:var(--g);display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;overflow:hidden;flex:none;border:0;padding:0;transition:box-shadow .2s}
+.av:hover{box-shadow:0 0 0 3px #8b3fe055}.av img{width:100%;height:100%;object-fit:cover}
+.who{color:var(--mu);font-size:12px;line-height:1.25;min-width:0}
+.who b{display:block;color:var(--tx);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.who small{font-size:11px}
+main{padding:68px 32px 28px;min-width:0;max-width:1400px}
+#mb,#ov{display:none}
+
+/* barra superior */
+#tb2{position:fixed;top:14px;right:24px;z-index:4;display:flex;gap:6px;padding:5px;border-radius:12px;background:var(--s1);border:1px solid var(--ln);box-shadow:0 6px 20px #0004}
+#tb2 .btn{padding:7px 10px;background:transparent;border-color:transparent}#tb2 .btn:hover{background:var(--s2)}
+kbd{font:11px Sora,sans-serif;border:1px solid var(--ln);border-radius:5px;padding:1px 6px;color:var(--mu);background:var(--s2)}
+#bell{position:relative}
+#bd{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;border-radius:9px;background:var(--er);color:#fff;font-size:10px;display:grid;place-items:center;padding:0 4px;font-weight:700}
+#np{position:fixed;top:64px;right:24px;width:min(340px,calc(100vw - 24px));max-height:70vh;overflow:auto;background:var(--s1);border:1px solid var(--ln);border-radius:12px;padding:12px;z-index:8;box-shadow:0 20px 50px #0007;animation:in .25s both}
+#np h4{margin:4px 2px 8px;font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+.al{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-radius:9px;margin-bottom:6px;font-size:13px;background:var(--s2);cursor:pointer;transition:transform .15s}
+.al:hover{transform:translateX(2px)}.al svg{width:16px;height:16px;margin-top:2px}.al.er svg{color:var(--er)}.al.wa svg{color:var(--wa)}
+.alp h3{display:flex;justify-content:space-between}
+
+/* ===================== PÁGINAS ===================== */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.top h2{margin:0;font-size:22px;letter-spacing:-.01em}.top p{margin:2px 0 0;color:var(--mu)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.top .tools{margin:0}
+.tools input{max-width:260px}.tools input.wd{max-width:340px}.tools select,.tools input[type=date]{width:auto}
+.fresh>.pg>*{animation:in .5s cubic-bezier(.2,.8,.2,1) both}
+.fresh>.pg>*:nth-child(2){animation-delay:.05s}.fresh>.pg>*:nth-child(3){animation-delay:.1s}.fresh>.pg>*:nth-child(4){animation-delay:.15s}.fresh>.pg>*:nth-child(5){animation-delay:.2s}.fresh>.pg>*:nth-child(n+6){animation-delay:.25s}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.tile{position:relative;overflow:hidden;background:var(--glass);border:1px solid var(--ln);border-radius:12px;padding:14px 16px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.tile:after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--g)}
+.tile span{color:var(--mu);font-size:12px}.tile b{display:block;font-size:26px;letter-spacing:-.02em}
+.tile>svg{position:absolute;right:12px;top:12px;opacity:.3;width:22px;height:22px}
+.tile.er b{background:none;color:var(--er)}.tile.er:after{background:var(--er)}
+.tile.wa b{background:none;color:var(--wa)}.tile.wa:after{background:var(--wa)}
+.grid2{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.panel{background:var(--glass);border:1px solid var(--ln);border-radius:12px;padding:18px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.panel h3{margin:0 0 14px;font-size:14px}
+.tile:hover,.dashp .panel:hover{transform:translateY(-3px);box-shadow:0 10px 30px #8b3fe022;border-color:#8b3fe055}
+.bar{display:grid;grid-template-columns:110px 1fr 44px;gap:10px;align-items:center;margin-bottom:10px;font-size:13px}
+.bar i{display:block;height:8px;border-radius:5px;background:var(--g);transform-origin:left;animation:gr .7s cubic-bezier(.2,.8,.2,1)}
+.bar em{font-style:normal;color:var(--mu);text-align:right}
+@keyframes gr{from{transform:scaleX(0)}}
+.lg{display:flex;flex-direction:column;gap:6px}.lg div{display:flex;justify-content:space-between}.lg b{font-weight:500}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px}
+.mv{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--ln)}.mv small{color:var(--mu);display:block}
+.empty{padding:36px;text-align:center;color:var(--mu)}.empty.sm{padding:14px}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.cc{position:relative;text-align:left;background:var(--s2);border:1px solid var(--ln);border-radius:11px;padding:12px;display:flex;flex-direction:column;gap:3px;transition:transform .2s,box-shadow .2s,border-color .2s;overflow:hidden}
+.cc:hover{transform:translateY(-3px);border-color:var(--ac);box-shadow:0 8px 24px #8b3fe033}
+.cc svg{color:var(--ac2);width:20px;height:20px}.cc span{font-size:12px;color:var(--mu)}.cc b{font-size:20px;letter-spacing:-.02em}
+.cc i{display:block;height:3px;border-radius:2px;background:var(--g);margin-top:4px;transform-origin:left;animation:gr .8s cubic-bezier(.2,.8,.2,1)}
+.cc.lw{border-color:#fbbf2466}.cc em{position:absolute;right:8px;top:8px;font-style:normal;font-size:10px;color:var(--wa);background:#fbbf2420;padding:1px 7px;border-radius:10px}
+.donut{width:150px;height:150px;border-radius:50%;position:relative;display:grid;place-items:center;margin:0 auto 16px;animation:pop .9s cubic-bezier(.2,.8,.2,1)}
+.donut i{position:absolute;inset:20px;border-radius:50%;background:var(--s1)}
+.donut b{position:relative;font-size:26px;line-height:1;margin-top:-10px}.donut small{position:absolute;bottom:44px;color:var(--mu);font-size:11px}
+@keyframes pop{from{transform:scale(.7) rotate(-90deg);opacity:0}}
+.wk{display:flex;align-items:flex-end;gap:10px;height:150px}
+.wk>div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.wk .bb{display:flex;gap:3px;align-items:flex-end;height:100%;width:100%;justify-content:center}
+.wk .bb i{width:40%;max-width:18px;min-height:2px;border-radius:4px 4px 0 0;transform-origin:bottom;animation:gv .8s cubic-bezier(.2,.8,.2,1)}
+.wk small{color:var(--mu);font-size:11px}@keyframes gv{from{transform:scaleY(0)}}
+.lgd{display:flex;gap:14px;color:var(--mu);font-size:12px;margin-top:10px}.lgd .dot{margin-right:5px}
+
+/* tabelas */
+.tw{overflow-x:auto;border:1px solid var(--ln);border-radius:12px;background:var(--glass)}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--ln);white-space:nowrap}
+th{color:var(--mu);font-weight:500;font-size:12px;position:sticky;top:0;background:var(--th)}
+tbody tr{transition:background .12s}tbody tr:hover{background:var(--s2)}
+tbody tr:hover td:first-child{box-shadow:inset 3px 0 var(--ac)}
+tr:last-child td{border:0}
+td.act{white-space:nowrap}
+td.wrap{white-space:normal;min-width:170px}
+.sr{cursor:pointer;user-select:none}.sr:hover{color:var(--tx)}
+.q{display:inline-flex;align-items:center;gap:4px}.q input{width:56px;text-align:center;padding:6px}
+.q button{width:28px;height:28px;border:1px solid var(--ln);background:var(--s2);border-radius:7px}.q button:hover{border-color:var(--ac)}
+.tag{padding:2px 9px;border-radius:20px;font-size:12px;background:var(--s2)}
+.tag.cat{display:inline-flex;align-items:center;gap:5px}.tag.cat svg{width:14px;height:14px}
+.chip{padding:2px 10px;border-radius:20px;font-size:12px;font-weight:500;display:inline-block}
+.st select{padding:5px 8px;width:auto;border-radius:20px;font-weight:500}
+.nm{background:0;border:0;padding:0;text-align:left;font-weight:500}.nm:hover{color:var(--ac2)}
+.ob{display:block;color:var(--mu);font-size:11px;font-weight:400}
+.bd{font-size:10px;padding:1px 7px;border-radius:10px;margin-left:8px}
+.bd.er{color:var(--er);background:#f8717122}.bd.wa{color:var(--wa);background:#fbbf2422}
+.pgn{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;color:var(--mu);font-size:13px}
+.pgn div{display:flex;align-items:center;gap:8px}.pgn select{width:auto;padding:6px 8px}
+.pgn .btn.i{width:32px;height:32px;justify-content:center;padding:0}
+.tabs{display:flex;gap:4px;background:var(--s1);border:1px solid var(--ln);border-radius:10px;padding:4px;width:max-content;max-width:100%;margin-bottom:14px;overflow-x:auto}
+.tabs button{border:0;background:0;padding:7px 14px;border-radius:7px;color:var(--mu);transition:background .15s,color .15s;white-space:nowrap}
+.tabs button.on{background:var(--s2);color:var(--tx)}
+#gt .tabs{margin-bottom:18px}
+.opt{display:flex;gap:8px;flex-wrap:wrap}
+.set{display:grid;gap:14px;max-width:760px}
+.rowf{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 0;border-top:1px solid var(--ln)}
+.dl{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.thumb{width:72px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--ln);background:var(--s2);flex:none}
+.fl{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--ln)}.fl>div{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.fl small{display:block;color:var(--mu)}
+.prog{height:10px;border-radius:6px;background:var(--s2);overflow:hidden;margin:10px 0 6px}.prog i{display:block;height:100%;background:var(--g);transition:width .4s}
+#cam{width:100%;max-height:260px;border-radius:12px;background:#000;margin:10px 0}
+
+/* máquinas em cartões */
+.mxg{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.mxh{display:flex;align-items:center;gap:10px;margin:26px 0 12px;font-size:13px;font-weight:600}.mxh:first-child{margin-top:4px}.mxh small{color:var(--mu);font-weight:400}.mxh:after{content:"";flex:1;height:1px;background:var(--ln)}
+.mxc{position:relative;display:flex;flex-direction:column;gap:12px;background:var(--s1);border:1px solid var(--ln);border-radius:14px;padding:18px 16px 14px;overflow:hidden;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;animation:in .4s cubic-bezier(.2,.8,.2,1) both;content-visibility:auto;contain-intrinsic-size:auto 300px}
+.mxc:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--sc)}
+.mxc:hover,.mxc:focus-visible{transform:translateY(-3px);border-color:color-mix(in srgb,var(--sc) 55%,var(--ln));box-shadow:0 14px 34px #0004}
+.mxc>header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.mxc h4{margin:0;font-size:15px;letter-spacing:-.01em}.mxc>header small{color:var(--mu);font-size:12px}
+.mxo{display:flex;align-items:center;gap:8px;font-size:13px}.mxo.no{color:var(--mu)}
+.mxa{width:26px;height:26px;border-radius:50%;background:var(--g);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700;flex:none}.mxa.no{background:var(--s2);color:var(--mu)}
+.mxs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mxs div{background:var(--s2);border-radius:9px;padding:8px 10px;min-width:0}.mxs small{display:block;color:var(--mu);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em}.mxs b{font-weight:500;font-size:13px;overflow-wrap:anywhere}.mxs .w2{grid-column:1/-1}
+.mxp{display:flex;flex-wrap:wrap;gap:6px}.mxp span{font-size:12px;padding:3px 9px;border-radius:20px;border:1px solid var(--ln);background:var(--s2)}.mxp em{font-style:normal;color:var(--mu);margin-right:4px}
+.mx0{color:var(--mu);font-size:12px;padding:10px;border:1px dashed var(--ln);border-radius:9px;text-align:center}
+.mxf{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:12px;border-top:1px solid var(--ln)}.mxr{flex:1;min-width:0}.mxr small{color:var(--mu);font-size:11px}.mxr div{height:5px;border-radius:4px;background:var(--s2);overflow:hidden;margin-top:4px}.mxr i{display:block;height:100%;background:var(--g);border-radius:4px;transform-origin:left;animation:gr .7s cubic-bezier(.2,.8,.2,1)}
+.mxf .btn.i{padding:6px}
+.mxv{display:inline-flex;border:1px solid var(--ln);border-radius:9px;overflow:hidden;background:var(--s1)}.mxv button{border:0;background:0;padding:8px 14px}.mxv button.on{background:var(--g);color:#fff}
+.mxb{font-size:11px;padding:2px 8px;border-radius:20px;background:#60a5fa26;color:var(--in);margin-left:6px;font-weight:500}
+.mxt td small{display:block;color:var(--mu)}
+
+/* máquinas em tabela: no estilo da planilha, cada célula editável */
+.sht{max-height:calc(100vh - 150px);overflow:auto}
+.sht table{min-width:0;width:max-content;border-collapse:separate;border-spacing:0}
+.sht th,.sht td{padding:3px 5px;border-bottom:1px solid var(--ln);border-right:1px solid var(--ln)}
+.sht th{z-index:2;text-align:center;font-weight:700;color:var(--tx);font-size:12px;padding:8px 6px;letter-spacing:.02em}
+.sht tbody tr:hover td:first-child{box-shadow:none}
+.sht .rn{width:38px;text-align:center;color:var(--mu);font-size:11px;background:var(--th);position:sticky;left:0;z-index:1}
+.sht th.rn{z-index:3}
+.sht .c1{position:sticky;left:38px;z-index:1;background:var(--s1)}.sht th.c1{z-index:3;background:var(--th)}
+.sht tbody tr:hover .c1{background:var(--s2)}
+.dd{width:100%;min-width:var(--w,110px);border:0;border-radius:20px;padding:4px 26px 4px 12px;text-align:center;font-size:13px;background:var(--s2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%238b92a3'/%3E%3C/svg%3E") no-repeat right 10px center;color:var(--tx);text-overflow:ellipsis;transition:background-color .15s,box-shadow .15s}
+.dd:hover{background-color:var(--lnh)}
+.dd:focus{outline:0;box-shadow:0 0 0 2px var(--ac);background-color:var(--s1)}
+.dd.tx{background-image:none;padding:4px 10px;border-radius:6px;background-color:transparent}.dd.tx:hover{background-color:var(--s2)}
+.dd::-webkit-calendar-picker-indicator{opacity:0}
+select.dd{appearance:none;-webkit-appearance:none;font-weight:500;cursor:pointer}
+.dd.s-u{background-color:#34d39933;color:#6ee7b7}.dd.s-e{background-color:var(--s2);color:var(--mu)}.dd.s-m{background-color:#fbbf2433;color:#fcd34d}.dd.s-b{background-color:#f8717133;color:#fca5a5}
+[data-theme=light] .dd.s-u{background-color:#d1f2dc;color:#137333}[data-theme=light] .dd.s-m{background-color:#fef3c7;color:#92400e}[data-theme=light] .dd.s-b{background-color:#fde2e1;color:#b91c1c}
+.dd.sv{box-shadow:0 0 0 2px var(--ok)}
+.shh{color:var(--mu);font-size:12px;margin:0 0 8px}
+
+/* aba Hardware */
+.hwt td{white-space:nowrap;vertical-align:top;font-size:13px;padding:9px 10px}
+.hwt td.w{white-space:normal;min-width:200px;max-width:280px}
+.hwt td.c1{font-size:13px}
+.hwd{display:flex;flex-direction:column;gap:4px}.hwd span{font-size:12px;padding:2px 8px;border-radius:6px;background:var(--s2);width:max-content;max-width:100%}
+.ni{color:var(--mu);font-style:italic;font-size:12px}
+.f2 .fld.w2{grid-column:1/-1}
+
+/* ===================== DIÁLOGOS ===================== */
+dialog{background:var(--s1);color:var(--tx);border:1px solid var(--ln);border-top:2px solid var(--ac);border-radius:16px;padding:24px;width:min(440px,92vw);max-height:92vh;overflow:auto;box-shadow:0 30px 80px var(--sh)}
+dialog::backdrop{background:#000a;backdrop-filter:blur(3px)}
+[data-theme=light] dialog::backdrop{background:#0006}
+dialog.wide{width:min(660px,94vw)}
+dialog h3{margin:0 0 16px}
+dialog h4{margin:16px 0 4px;font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+dialog .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:10px}
+#cfm{width:min(400px,92vw)}#cfm p{margin:0 0 14px}#cfm input{margin-bottom:6px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.fh{margin:16px 0 8px;font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.07em}
+.hh{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:14px}.hh h3{margin:0 0 8px}
+.qr{width:96px;text-align:center;flex:none}.qr svg{display:block;width:96px;height:96px;background:#fff;padding:4px;border-radius:8px}.qr small{color:var(--mu);font-size:10px}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.kv>div{background:var(--s2);border-radius:10px;padding:10px 12px}.kv small{color:var(--mu);display:block;font-size:11px}.kv b{font-size:15px}
+.note{background:#fbbf2414;border:1px solid #fbbf2433;border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px}.note small{display:block;color:var(--wa);margin-bottom:2px}
+.pw{font-family:ui-monospace,monospace}.sm2{color:var(--mu);font-size:12px}
+#pal{padding:0;width:min(560px,94vw);margin:12vh auto auto;overflow:hidden;border-top-width:1px}
+#pal input{border:0;border-bottom:1px solid var(--ln);border-radius:0;padding:16px 18px;font-size:15px}#pal input:focus{box-shadow:none}
+#xr{max-height:50vh;overflow:auto;padding:6px}
+.pi{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;cursor:pointer}.pi.on,.pi:hover{background:var(--s2)}.pi small{display:block;color:var(--mu)}.pi svg{color:var(--ac2)}
+.pf{padding:8px 14px;color:var(--mu);font-size:11px;border-top:1px solid var(--ln);display:flex;gap:14px}
+
+/* avisos */
+#toast{position:fixed;right:18px;bottom:18px;z-index:9;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 36px)}
+#toast div{display:flex;gap:10px;align-items:center;background:var(--s2);border:1px solid var(--ln);border-left:3px solid var(--ac);padding:10px 14px;border-radius:9px;box-shadow:0 10px 30px #0005;animation:in .3s both;transition:opacity .25s,transform .25s}
+#toast div.ok{border-left-color:var(--ok)}#toast div svg{stroke:var(--ok)}
+#toast div.out{opacity:0;transform:translateX(24px)}
+#toast .lnk{font-weight:600;margin-left:6px}
+
+/* ===================== IMPRESSÃO / PDF ===================== */
+#prt{display:none}
+@page{margin:14mm}
+@media print{
+html,body{background:#fff!important}
+body>*:not(#prt){display:none!important}
+body:before,body:after{display:none!important}
+#prt{display:block;color:#111;font:12px/1.4 Sora,system-ui,sans-serif}
+#prt table{width:100%;min-width:0;border-collapse:collapse;margin-bottom:14px}
+#prt thead{display:table-header-group}#prt tr{break-inside:avoid}
+#prt th,#prt td{border:1px solid #ccc;padding:4px 8px;white-space:normal;color:#111;background:#fff;position:static;text-align:left}
+#prt th{background:#eee}
+#prt .ph{display:flex;gap:14px;align-items:center;border-bottom:3px solid #8b3fe0;padding-bottom:10px;margin-bottom:14px}
+#prt .ph img{height:40px}#prt h1{margin:0;font-size:20px}#prt p{margin:2px 0 0;color:#555}#prt h2{font-size:14px;margin:16px 0 6px}
+#prt .ps{display:flex;gap:10px;margin-bottom:6px}#prt .ps div{flex:1;border:1px solid #ccc;padding:8px 10px;border-radius:6px}#prt .ps b{display:block;font-size:18px}
+}
+
+/* ===================== CELULAR ===================== */
+@media(max-width:860px){
+#auth{grid-template-columns:1fr}.hero{display:none}
+#app,#app.col{grid-template-columns:1fr}
+aside{position:fixed;inset:0 auto 0 0;width:264px;height:auto;z-index:6;overflow-y:auto;transform:translateX(-100%);transition:transform .25s;padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+#app.open aside{transform:none;box-shadow:0 0 60px #000a}
+#app.col .nv span,#app.col .logo span{display:inline}#app.col .who{display:block}#app.col .nb{display:inline}
+#mb{display:inline-flex;position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:12px;z-index:3}
+#app.open #ov{display:block;position:fixed;inset:0;background:#000a;z-index:5}
+main{padding:62px 14px 28px}
+.grid2{grid-template-columns:1fr}
+#tb2{top:calc(8px + env(safe-area-inset-top,0px));right:10px}
+#srch span,#srch kbd{display:none}
+#np{right:10px;top:58px}
+.f2{grid-template-columns:1fr}.kv{grid-template-columns:1fr 1fr}
+.nv:after{display:none}
+.tools input,.tools input.wd{max-width:none}
+.mxg{grid-template-columns:1fr}
+}
+@media(hover:none){.nv:after{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="auth">
+  <div class="hero">
+    <div class="logo"><img class="lm" alt="">SPBIM</div>
+    <div><h1>Cada peça no seu lugar, cada movimento registrado.</h1><p>Inventário de peças e periféricos com histórico de entradas, saídas e responsáveis.</p></div>
+    <div class="nums"><div><b id="hm"></b><span>itens cadastrados</span></div><div><b id="hp"></b><span>peças no estoque</span></div></div>
+  </div>
+  <div class="formside"><div class="card" id="ac"></div></div>
+</div>
+
+<div id="app" class="hide">
+  <aside>
+    <button class="nv" id="tg" data-tip="Recolher ou abrir menu" aria-label="Abrir ou fechar menu"></button>
+    <div class="logo"><img class="lm" alt=""><span>SPBIM</span></div>
+    <nav id="nav" aria-label="Menu principal"></nav>
+    <div class="sp"></div>
+    <div class="usr"><button class="av" id="av" aria-label="Alterar foto de perfil" title="Clique para trocar a foto"></button><div class="who" id="who"></div></div>
+    <button class="nv" id="out" data-tip="Encerrar sessão"></button>
+  </aside>
+  <button class="btn i" id="mb" aria-label="Abrir menu"></button>
+  <div id="ov"></div>
+  <main><div id="gt" class="hide"></div><div id="mn"></div></main>
+  <div id="tb2"></div>
+  <div id="np" class="hide"></div>
+</div>
+
+<dialog id="dlg"></dialog>
+<dialog id="cfm"></dialog>
+<dialog id="pal"><input id="xq" placeholder="Buscar peças, computadores, patrimônio ou páginas…" autocomplete="off" aria-label="Busca geral"><div id="xr"></div><div class="pf"><span><kbd>↑</kbd> <kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span><kbd>Esc</kbd> fechar</span></div></dialog>
+<input type="file" id="avf" accept="image/*" class="hide">
+<div id="prt"></div>
+<div id="toast" aria-live="polite"></div>
+
+<script>
+'use strict';
+/* =====================================================================
+   DADOS INICIAIS (inventário original, máquinas e especificações)
+   ===================================================================== */
+const SEED=[{"id": "i0", "name": "Exbom", "cat": "Teclado", "qty": 4, "status": "Funcionando", "obs": ""}, {"id": "i1", "name": "Multilaser", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i2", "name": "App-Tech", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i3", "name": "Lenovo", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i4", "name": "Brastech", "cat": "Teclado", "qty": 2, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i5", "name": "Apptech", "cat": "Teclado", "qty": 8, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i6", "name": "Leardship", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i7", "name": "Maxxtro", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i8", "name": "Kroos 2.4hz", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i9", "name": "Leardship", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i10", "name": "Multilaser 2.4hz", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i11", "name": "Multilaser", "cat": "Teclado", "qty": 1, "status": "Funcionando", "obs": "Lista 2"}, {"id": "i12", "name": "CBTech", "cat": "Mouse", "qty": 5, "status": "Funcionando", "obs": ""}, {"id": "i13", "name": "Liba", "cat": "Mouse", "qty": 2, "status": "Funcionando", "obs": ""}, {"id": "i14", "name": "Multilaser", "cat": "Mouse", "qty": 8, "status": "Funcionando", "obs": ""}, {"id": "i15", "name": "Logi", "cat": "Mouse", "qty": 3, "status": "Funcionando", "obs": ""}, {"id": "i16", "name": "Lenovo", "cat": "Mouse", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i17", "name": "Inova", "cat": "Mouse", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i18", "name": "Exbom", "cat": "Mouse", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i19", "name": "Bluetooth", "cat": "Mouse", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i20", "name": "Dellinc", "cat": "Mouse", "qty": 4, "status": "Funcionando", "obs": ""}, {"id": "i21", "name": "M170", "cat": "Mouse", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i22", "name": "Deal", "cat": "Mouse", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i23", "name": "Dell", "cat": "Monitores", "qty": 5, "status": "Funcionando", "obs": "3º andar"}, {"id": "i24", "name": "LG", "cat": "Monitores", "qty": 5, "status": "Funcionando", "obs": "3º andar"}, {"id": "i25", "name": "MNBOX", "cat": "Monitores", "qty": 2, "status": "Funcionando", "obs": "3º andar"}, {"id": "i26", "name": "BPX", "cat": "Monitores", "qty": 1, "status": "Funcionando", "obs": "3º andar"}, {"id": "i27", "name": "PCTOP", "cat": "Monitores", "qty": 1, "status": "Funcionando", "obs": "3º andar"}, {"id": "i28", "name": "SAMSUNG", "cat": "Monitores", "qty": 1, "status": "Funcionando", "obs": "3º andar"}, {"id": "i29", "name": "BPC", "cat": "Monitores", "qty": 1, "status": "Funcionando", "obs": "3º andar"}, {"id": "i30", "name": "CBTech", "cat": "Fones de ouvido", "qty": 6, "status": "Funcionando", "obs": ""}, {"id": "i31", "name": "Trust", "cat": "Fones de ouvido", "qty": 3, "status": "Funcionando", "obs": ""}, {"id": "i32", "name": "Trust", "cat": "Fones de ouvido", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i33", "name": "JBL", "cat": "Fones de ouvido", "qty": 1, "status": "Funcionando", "obs": "Sem microfone"}, {"id": "i34", "name": "STagg", "cat": "Fones de ouvido", "qty": 2, "status": "Funcionando", "obs": ""}, {"id": "i35", "name": "HP", "cat": "Fones de ouvido", "qty": 1, "status": "Funcionando", "obs": "Sem microfone"}, {"id": "i36", "name": "Genérico", "cat": "Fones de ouvido", "qty": 2, "status": "Funcionando", "obs": ""}, {"id": "i37", "name": "Multilaser", "cat": "Caixas de som", "qty": 1, "status": "Funcionando", "obs": ""}, {"id": "i38", "name": "DDR3 2GB", "cat": "Memória RAM", "qty": 15, "status": "Não testado", "obs": ""}, {"id": "i39", "name": "DDR3 4GB", "cat": "Memória RAM", "qty": 78, "status": "Não testado", "obs": ""}, {"id": "i40", "name": "DDR3 8GB", "cat": "Memória RAM", "qty": 13, "status": "Não testado", "obs": ""}, {"id": "i41", "name": "DDR3 16GB", "cat": "Memória RAM", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i42", "name": "DDR4 8GB", "cat": "Memória RAM", "qty": 3, "status": "Não testado", "obs": ""}, {"id": "i43", "name": "DDR4 16GB", "cat": "Memória RAM", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i44", "name": "DDR5 48GB", "cat": "Memória RAM", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i45", "name": "DDR4 32GB", "cat": "Memória RAM", "qty": 0, "status": "Não testado", "obs": "Quantidade não informada"}, {"id": "i46", "name": "HD Seagate 1TB", "cat": "HD", "qty": 5, "status": "Não testado", "obs": ""}, {"id": "i47", "name": "HD Western Digital 500GB", "cat": "HD", "qty": 4, "status": "Não testado", "obs": ""}, {"id": "i48", "name": "HD Samsung Notebook 320GB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i49", "name": "HD Toshiba Notebook 750GB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i50", "name": "HD WD Notebook 320GB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i51", "name": "HD Seagate 320GB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i52", "name": "HD HGST 2TB", "cat": "HD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i53", "name": "HD Toshiba 500GB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i54", "name": "HD Seagate 2TB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i55", "name": "HD Toshiba 2TB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i56", "name": "HD Hitachi 1TB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i57", "name": "HD Seagate 500GB", "cat": "HD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i58", "name": "HD Seagate", "cat": "HD", "qty": 1, "status": "Não testado", "obs": "Erro SMART"}, {"id": "i59", "name": "HD WD Blue 1TB", "cat": "HD", "qty": 1, "status": "Não testado", "obs": "Estava na aba SSDs"}, {"id": "i60", "name": "SSD Kingston 120GB", "cat": "SSD", "qty": 5, "status": "Não testado", "obs": ""}, {"id": "i61", "name": "SSD WD Green 120GB", "cat": "SSD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i62", "name": "SSD Goldenfir 256GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i63", "name": "SSD SanDisk 120GB", "cat": "SSD", "qty": 4, "status": "Não testado", "obs": ""}, {"id": "i64", "name": "SSD Kingspec 120GB", "cat": "SSD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i65", "name": "SSD Kingbank 240GB", "cat": "SSD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i66", "name": "SSD Supersspeed 120GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i67", "name": "SSD ADATA 120GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i68", "name": "SSD Goldenfir 512GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i69", "name": "SSD Kingston 240GB", "cat": "SSD", "qty": 12, "status": "Não testado", "obs": ""}, {"id": "i70", "name": "SSD Somnambulist 240GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i71", "name": "SSD Eteke 120GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i72", "name": "SSD Samsung 250GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i73", "name": "SSD Gigabyte 256GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i74", "name": "SSD Kingston 480GB", "cat": "SSD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i75", "name": "SSD SanDisk 240GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i76", "name": "SSD HP 250GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i77", "name": "SSD WD Green 240GB", "cat": "SSD", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i78", "name": "SSD Crucial 240GB", "cat": "SSD", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i79", "name": "GeForce 8400 GS 1GB", "cat": "Placas de vídeo", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i80", "name": "RX 580 8GB DDR5", "cat": "Placas de vídeo", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i81", "name": "GeForce GTX 1660 Super 6GB DDR6", "cat": "Placas de vídeo", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i82", "name": "GT 635", "cat": "Placas de vídeo", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i83", "name": "GeForce 9800 GT 1GB", "cat": "Placas de vídeo", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i84", "name": "GT 720", "cat": "Placas de vídeo", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i85", "name": "GT 730 2GB DDR3", "cat": "Placas de vídeo", "qty": 5, "status": "Não testado", "obs": ""}, {"id": "i86", "name": "R7 250", "cat": "Placas de vídeo", "qty": 3, "status": "Não testado", "obs": ""}, {"id": "i87", "name": "GT 210", "cat": "Placas de vídeo", "qty": 7, "status": "Não testado", "obs": ""}, {"id": "i88", "name": "AMD Radeon HD 5450", "cat": "Placas de vídeo", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i89", "name": "Placa HD 545X", "cat": "Placas de vídeo", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i90", "name": "Radeon 210", "cat": "Placas de vídeo", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i91", "name": "RTX 3050 8GB", "cat": "Placas de vídeo", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i92", "name": "B635M", "cat": "Placa-mãe", "qty": 1, "status": "Não testado", "obs": ""}, {"id": "i93", "name": "Fonte de alimentação por tensão e corrente", "cat": "Fontes de alimentação", "qty": 29, "status": "Não testado", "obs": ""}, {"id": "i94", "name": "Fonte de alimentação", "cat": "Fontes de alimentação", "qty": 4, "status": "Não testado", "obs": ""}, {"id": "i95", "name": "Cabo HDMI", "cat": "Cabos", "qty": 42, "status": "Não testado", "obs": ""}, {"id": "i96", "name": "Cabo DVI", "cat": "Cabos", "qty": 4, "status": "Não testado", "obs": ""}, {"id": "i97", "name": "Cabo de 2 metros", "cat": "Cabos", "qty": 12, "status": "Funcionando", "obs": ""}, {"id": "i98", "name": "Cabo VGA", "cat": "Cabos", "qty": 6, "status": "Não testado", "obs": ""}, {"id": "i99", "name": "Cabo (tipo não especificado)", "cat": "Cabos", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i100", "name": "Cabo da fonte", "cat": "Cabos", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i101", "name": "Cabo tipo C", "cat": "Cabos", "qty": 4, "status": "Funcionando", "obs": ""}, {"id": "i102", "name": "Cabo tipo USB", "cat": "Cabos", "qty": 7, "status": "Não testado", "obs": ""}, {"id": "i103", "name": "Cabo USB para USB", "cat": "Cabos", "qty": 10, "status": "Funcionando", "obs": ""}, {"id": "i104", "name": "Cabo de áudio e vídeo", "cat": "Cabos", "qty": 4, "status": "Funcionando", "obs": ""}, {"id": "i105", "name": "Cabo de rede", "cat": "Cabos", "qty": 5, "status": "Funcionando", "obs": ""}, {"id": "i106", "name": "Emenda / conector HDMI", "cat": "Conectores", "qty": 2, "status": "Não testado", "obs": ""}, {"id": "i107", "name": "Conversor / adaptador VGA para HDMI", "cat": "Adaptadores", "qty": 4, "status": "Funcionando", "obs": ""}, {"id": "i108", "name": "Adaptador de som Exbom", "cat": "Adaptadores", "qty": 9, "status": "Funcionando", "obs": ""}, {"id": "i109", "name": "Yuya PRO Long WiFi", "cat": "Rede / Wi-Fi", "qty": 31, "status": "Funcionando", "obs": ""}],CATS=["Teclado", "Mouse", "Monitores", "Fones de ouvido", "Caixas de som", "Memória RAM", "HD", "SSD", "Placas de vídeo", "Placa-mãe", "Fontes de alimentação", "Cabos", "Conectores", "Adaptadores", "Rede / Wi-Fi"],STS=["Funcionando","Com defeito","Em manutenção","Não testado"],SC={"Funcionando":"#34d399","Com defeito":"#f87171","Em manutenção":"#fbbf24","Não testado":"#8b92a3"};
+/* Máquinas e hardware foram removidos deste arquivo público (continham senhas e chaves de recuperação). Eles ficam no Supabase. */
+const MACH=[];
+const HW=[];
+const LOGO='data:image/png;base64,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';
+
+/* =====================================================================
+   UTILITÁRIOS
+   ===================================================================== */
+const $=s=>document.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone=o=>JSON.parse(JSON.stringify(o));
+const COLL=new Intl.Collator('pt-BR',{numeric:true,sensitivity:'base'}),cmpS=(a,b)=>COLL.compare(a||'',b||'');
+const debounce=(f,ms=140)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),ms)}};
+const fdt=t=>t?new Date(t).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'';
+const tdy=()=>{const d=new Date();return new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+const fd=s=>s?s.split('-').reverse().join('/'):'—';
+const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const reduced=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+const mem={};let quotaWarned=false;
+const ls={
+  get(k,d){try{const v=localStorage.getItem(k);if(v!==null)return JSON.parse(v)}catch(e){}return k in mem?mem[k]:d},
+  set(k,v){mem[k]=v;cloudQueue(k,v);try{localStorage.setItem(k,JSON.stringify(v))}catch(e){if(!quotaWarned&&e&&e.name==='QuotaExceededError'){quotaWarned=true;toast('O armazenamento do navegador está cheio. Baixe um backup e esvazie a lixeira.')}}}
+};
+
+/* =====================================================================
+   BANCO DE DADOS (via API própria)
+   O navegador NÃO fala com o Supabase: ele chama /api/... no nosso
+   servidor (Vercel), que confere o login e só então acessa o banco.
+   Nenhuma chave do banco fica neste arquivo.
+   Aberto direto do disco (file://), o site usa o modo antigo (só neste navegador).
+   ===================================================================== */
+const CLOUD_CFG=location.protocol!=='file:';
+async function api(path,opt={}){
+  const r=await fetch('/api/'+path,{method:opt.method||'GET',credentials:'same-origin',cache:'no-store',
+    headers:opt.body!==undefined?{'Content-Type':'application/json'}:{},body:opt.body!==undefined?JSON.stringify(opt.body):undefined});
+  let j=null;try{j=await r.json()}catch(e){}
+  if(!r.ok){const e=new Error((j&&j.erro)||('HTTP '+r.status));e.status=r.status;throw e}
+  return j}
+/* chave do localStorage -> linha da tabela "inventario" */
+const SYNC={'bs2.items':'items','bs2.movs':'movs','bs2.per':'per','bs2.cmp':'cmp','bs2.acts':'acts','bs3.assets':'assets','bs3.loans':'loans','bs3.maint':'maint','bs3.trash':'trash','bs6.hw':'hw','bs.users':'users','bs2.low':'low'};
+const KEYOF=Object.fromEntries(Object.entries(SYNC).map(([k,v])=>[v,k]));
+const cloud={on:false,pend:{},sent:{},t:null,poll:null,ts:null,warned:false};
+function cloudQueue(k,v){if(!cloud.on||!(k in SYNC))return;const s=JSON.stringify(v);if(cloud.sent[k]===s){delete cloud.pend[k];return}
+  cloud.pend[k]=s;clearTimeout(cloud.t);cloud.t=setTimeout(cloudPush,700)}
+async function cloudPush(){clearTimeout(cloud.t);if(!cloud.on)return;const p=cloud.pend;cloud.pend={};
+  const rows=Object.entries(p).map(([k,s])=>({chave:SYNC[k],dados:JSON.parse(s)}));if(!rows.length)return;
+  let error;try{await api('inventario',{method:'PUT',body:{linhas:rows}})}catch(e){error=e}
+  if(error){console.error('API:',error);cloud.pend={...p,...cloud.pend};
+    if(error.status===401)return cloudExpired();
+    cloud.t=setTimeout(cloudPush,5000);
+    if(!cloud.warned){cloud.warned=true;toast('Sem conexão com o banco de dados. As alterações serão enviadas quando a conexão voltar.')}return}
+  if(cloud.warned){cloud.warned=false;toast('Conexão restabelecida. Alterações salvas.','ok')}
+  for(const k in p)cloud.sent[k]=p[k]}
+async function cloudPull(){const r=await api('inventario');cloud.ts=r.ts||null;
+  const got={};r.linhas.forEach(x=>{const k=KEYOF[x.chave];if(k){got[k]=x.dados;cloud.sent[k]=JSON.stringify(x.dados)}});return got}
+function cloudApply(got){
+  for(const k in got){mem[k]=got[k];try{localStorage.setItem(k,JSON.stringify(got[k]))}catch(e){}}
+  const A=k=>Array.isArray(got[k]);
+  if(A('bs2.items'))items=got['bs2.items'];if(A('bs2.movs'))movs=got['bs2.movs'];if(A('bs2.per'))per=got['bs2.per'];if(A('bs2.cmp'))cmp=got['bs2.cmp'];if(A('bs2.acts'))acts=got['bs2.acts'];
+  if(A('bs3.assets'))assets=got['bs3.assets'];if(A('bs3.loans'))loans=got['bs3.loans'];if(A('bs3.maint'))maint=got['bs3.maint'];if(A('bs3.trash'))trash=got['bs3.trash'];if(A('bs6.hw'))hw=got['bs6.hw'];
+  lastS=ser();lastD=JSON.parse(lastS);lastA=acts[0]?acts[0].t:0;undoS=[]}
+/* atualização automática: a cada 15 s pergunta à API o que mudou e redesenha a tela */
+async function cloudPoll(){if(!cloud.on||document.hidden)return;
+  let r;try{r=await api('inventario'+(cloud.ts?'?desde='+encodeURIComponent(cloud.ts):''))}catch(e){if(e.status===401)cloudExpired();return}
+  if(!cloud.on)return;if(r.ts)cloud.ts=r.ts;let ch=false;
+  for(const x of r.linhas){const k=KEYOF[x.chave];if(!k||cloud.pend[k])continue;
+    const s=JSON.stringify(x.dados);if(cloud.sent[k]===s)continue;cloud.sent[k]=s;cloudApply({[k]:x.dados});ch=true}
+  if(ch&&user){if(!document.querySelector('dialog[open]')&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))render();refreshBar()}}
+function cloudLive(){if(!cloud.poll)cloud.poll=setInterval(cloudPoll,15000)}
+function cloudStop(){cloud.on=false;clearTimeout(cloud.t);clearInterval(cloud.poll);cloud.poll=null}
+/* sessão vencida: volta para o login sem perder o que ainda não foi enviado */
+function cloudExpired(){if(!user)return;cloudStop();user=null;ls.set('bs.sess',null);kStop();closeDlg();
+  $('#np').classList.add('hide');$('#app').classList.add('hide');$('#auth').classList.remove('hide');
+  authUI('<p class="err">Sua sessão expirou. Entre novamente para continuar.</p>')}
+async function cloudStart(s){
+  const keep=cloud.pend;cloud.pend={};
+  try{const got=await cloudPull();cloud.on=true;
+    /* banco vazio (primeiro acesso): envia os dados que já estão neste navegador */
+    if(Object.keys(got).length)cloudApply(got);else{save();ls.set('bs.users',users())}
+    /* alterações feitas antes da sessão vencer: reaplica e envia */
+    if(Object.keys(keep).length){const g={};for(const k in keep)g[k]=JSON.parse(keep[k]);cloudApply(g);Object.assign(cloud.pend,keep);cloudPush()}
+    cloudLive()}
+  catch(e){console.error(e);cloudStop();cloud.pend=keep;
+    if(e.status===401)return authUI();
+    api('logout',{method:'POST',body:{}}).catch(()=>{});
+    return authUI('<p class="err">Não foi possível acessar o banco de dados. Verifique a internet e tente novamente.</p>')}
+  const em=s.user.email.toLowerCase(),us=users();let u=us.find(x=>x.email===em);
+  if(!u){const md=s.user.user_metadata||{};
+    u={name:md.name||md.nome||em.split('@')[0],email:em,role:us.some(x=>String(x.email||'').includes('@'))?'Operador':'Administrador'};ls.set('bs.users',[...us,u])}
+  enter(u)}
+function cloudAuthUI(note){
+  $('#ac').innerHTML=`<div class="pane"><h2>Entrar</h2><p class="sub">Use o e-mail e a senha cadastrados pelo administrador.</p>${note||''}<form id="fm" novalidate>
+<div class="fld" id="f-email"><label for="email">E-mail</label><input id="email" type="email" autocomplete="username" maxlength="120"></div>
+<div class="fld" id="f-pw"><label for="pw">Senha</label><input id="pw" type="password" autocomplete="current-password" maxlength="200"></div>
+<button class="btn p" id="go" type="submit">Entrar</button></form></div>`;
+  $('#fm').onsubmit=async e=>{e.preventDefault();$$('.bad').forEach(f=>f.classList.remove('bad'));$$('.err').forEach(x=>x.remove());
+    const em=$('#email').value.trim(),pw=$('#pw').value;
+    if(!em)return bad('email','Informe seu e-mail.');if(!pw)return bad('pw','Informe sua senha.');
+    const b=$('#go');b.disabled=true;b.textContent='Entrando…';
+    let s;try{s=await api('login',{method:'POST',body:{email:em,senha:pw}})}
+    catch(err){b.disabled=false;b.textContent='Entrar';
+      return bad('pw',err.status===401?'E-mail ou senha incorretos.':err.status===429?'Muitas tentativas. Aguarde alguns minutos.':'Não foi possível conectar ao servidor. Tente novamente.')}
+    b.textContent='Carregando dados…';cloudStart(s)};
+  setTimeout(()=>$('#email').focus(),50)}
+
+const rawGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+
+/* bibliotecas carregadas só quando precisa (Excel ~900 KB) */
+const libs={};
+function need(name,src,glob){return libs[name]||(libs[name]=new Promise((ok,no)=>{if(window[glob])return ok(window[glob]);const s=document.createElement('script');s.src=src;s.async=true;s.onload=()=>window[glob]?ok(window[glob]):no();s.onerror=()=>{delete libs[name];s.remove();no(new Error(name))};document.head.append(s)}))}
+const XL=()=>need('xlsx','https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js','XLSX');
+async function xl(rows,n){if(!rows.length)return toast('Nada para exportar');try{const X=await XL(),wb=X.utils.book_new();X.utils.book_append_sheet(wb,X.utils.json_to_sheet(rows),'Dados');X.writeFile(wb,n+'.xlsx')}catch(e){toast('Não foi possível carregar o módulo de Excel. Verifique a conexão.')}}
+async function readSheet(f){const X=await XL(),wb=X.read(await f.arrayBuffer(),{type:'array'});return X.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])}
+const col=(r,...k)=>{for(const x of k){const h=Object.keys(r).find(y=>y.trim().toLowerCase()===x);if(h!==undefined)return r[h]}return''};
+
+/* =====================================================================
+   ÍCONES
+   ===================================================================== */
+const P={
+box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/>',dash:'<path d="M4 13h6V4H4zM14 20h6V4h-6zM4 20h6v-4H4z"/>',inv:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+pc:'<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',mv:'<path d="M7 4v14m0 0l-3-3m3 3l3-3M17 20V6m0 0l-3 3m3-3l3 3"/>',
+eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+up:'<path d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"/>',dn:'<path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16"/>',out:'<path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/>',tr:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+kb:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>',ms:'<rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 3v7"/>',
+mon:'<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>',hp:'<path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="3" y="14" width="4" height="7" rx="1.5"/><rect x="17" y="14" width="4" height="7" rx="1.5"/>',
+spk:'<rect x="6" y="2" width="12" height="20" rx="2"/><circle cx="12" cy="15" r="3"/><path d="M12 6h.01"/>',ram:'<rect x="2" y="7" width="20" height="9" rx="1"/><path d="M6 11v2M10 11v2M14 11v2M18 11v2M5 16v3M9 16v3M13 16v3M17 16v3"/>',
+hdd:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M12 12h.01"/>',ssd:'<rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 11h4M7 14h2"/>',
+gpu:'<rect x="2" y="7" width="20" height="10" rx="2"/><circle cx="9" cy="12" r="2.5"/><circle cx="16" cy="12" r="2.5"/><path d="M5 17v2"/>',mb:'<rect x="3" y="3" width="18" height="18" rx="2"/><rect x="8" y="8" width="8" height="8"/><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/>',
+psu:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',cab:'<path d="M5 3v6a3 3 0 003 3h8a3 3 0 013 3v6M3 3h4M17 21h4"/>',con:'<path d="M9 3v5M15 3v5M7 8h10v4a5 5 0 01-10 0zM12 17v4"/>',
+ada:'<rect x="3" y="8" width="14" height="8" rx="2"/><path d="M17 10h4v4h-4M7 12h6"/>',wf:'<path d="M2 9a15 15 0 0120 0M5 12.5a10 10 0 0114 0M8.5 16a5 5 0 017 0M12 19.5h.01"/>',
+bell:'<path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 004 0"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+moon:'<path d="M21 13A9 9 0 1111 3a7 7 0 0010 10z"/>',search:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+wrench:'<path d="M14 7l3 3M3 21l9-9M15 3a5 5 0 00-4 7l-8 8 3 3 8-8a5 5 0 007-4l-3 3-3-1-1-3z"/>',alert:'<path d="M12 3L2 20h20zM12 10v5M12 18h.01"/>',check:'<path d="M5 12l5 5 9-10"/>',
+chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',users:'<circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0114 0M16 4.5a3.5 3.5 0 010 7M18 14a7 7 0 013 6"/>',
+cog:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+qr:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3M21 14v.01M14 21h3M21 17v4"/>',
+hist:'<path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.5M3 4v4h4M12 7v5l3 2"/>',tag:'<path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1.2"/>',
+key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/>',scan:'<path d="M4 8V5a1 1 0 011-1h3M16 4h3a1 1 0 011 1v3M20 16v3a1 1 0 01-1 1h-3M8 20H5a1 1 0 01-1-1v-3M4 12h16"/>',
+undo:'<path d="M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24" aria-hidden="true">${P[n]||P.box}</svg>`;
+
+/* =====================================================================
+   CONSTANTES
+   ===================================================================== */
+const CST=['Em uso','Em estoque','Em manutenção','Baixado'],CSC={'Em uso':'#34d399','Em estoque':'#8b92a3','Em manutenção':'#fbbf24','Baixado':'#f87171'};
+const AST=['Em uso','Em estoque','Emprestado','Em manutenção','Baixado'],ASC={...CSC,'Emprestado':'#60a5fa'};
+const CI={'Teclado':'kb','Mouse':'ms','Monitores':'mon','Fones de ouvido':'hp','Caixas de som':'spk','Memória RAM':'ram','HD':'hdd','SSD':'ssd','Placas de vídeo':'gpu','Placa-mãe':'mb','Fontes de alimentação':'psu','Cabos':'cab','Conectores':'con','Adaptadores':'ada','Rede / Wi-Fi':'wf','Computador':'pc'};
+const PF={'Computador':'PC','Monitores':'MON','Mouse':'MOU','Teclado':'TEC','Fones de ouvido':'FON','Caixas de som':'CXS','Memória RAM':'RAM','HD':'HD','SSD':'SSD','Placas de vídeo':'GPU','Placa-mãe':'PMB','Fontes de alimentação':'FNT','Cabos':'CAB','Conectores':'CON','Adaptadores':'ADP','Rede / Wi-Fi':'RDE'};
+const K={items:'Item de estoque',cmp:'Computador',per:'Periférico',assets:'Patrimônio',loans:'Empréstimo',maint:'Manutenção',hw:'Hardware'};
+const ROLES=['Administrador','Operador'];
+const NAV=[['dash','Dashboard','dash','Visão geral'],['inv','Suprimento','inv','Peças e periféricos'],['cmp','Inventário','pc','Máquinas, patrimônio e empréstimos'],['man','Alertas','alert','Manutenção e estoque baixo'],['mov','Movimentações','mv','Entradas, saídas e relatórios'],['cfg','Configurações','cog','Ajustes, usuários e lixeira']];
+const GRP=[{id:'inv',t:[['inv','Peças'],['per','Periféricos']]},{id:'cmp',t:[['cmp','Máquinas'],['hw','Hardware'],['ast','Patrimônio'],['loan','Empréstimos'],['chk','Conferência']]},{id:'man',t:[['man','Manutenção'],['low','Estoque baixo']]},{id:'mov',t:[['mov','Movimentações'],['rel','Relatórios']]},{id:'cfg',t:[['cfg','Geral'],['usr','Usuários'],['trash','Lixeira']]}];
+const PAGES={dash:['Dashboard','dash'],inv:['Peças (suprimento)','inv'],per:['Periféricos','kb'],cmp:['Máquinas (inventário)','pc'],hw:['Hardware','gpu'],ast:['Patrimônio','tag'],loan:['Empréstimos','key'],chk:['Conferência','scan'],man:['Manutenção','wrench'],low:['Estoque baixo','alert'],mov:['Movimentações','mv'],rel:['Relatórios','chart'],usr:['Usuários','users'],cfg:['Configurações','cog'],trash:['Lixeira','tr']};
+const grpOf=v=>GRP.find(g=>g.t.some(x=>x[0]===v));
+
+/* =====================================================================
+   ESTADO (mesmas chaves do localStorage da versão anterior)
+   ===================================================================== */
+let items=ls.get('bs2.items',null)||clone(SEED),movs=ls.get('bs2.movs',[]),per=ls.get('bs2.per',[]),cmp=ls.get('bs2.cmp',[]),acts=ls.get('bs2.acts',[]);
+let assets=ls.get('bs3.assets',[]),loans=ls.get('bs3.loans',[]),maint=ls.get('bs3.maint',[]),trash=ls.get('bs3.trash',[]),hw=ls.get('bs6.hw',null);
+/* aba Hardware: começa com a lista coletada das máquinas e depois fica salva no navegador */
+if(!Array.isArray(hw)){hw=clone(HW);try{localStorage.setItem('bs6.hw',JSON.stringify(hw))}catch(e){}}
+let user=ls.get('bs.sess',null),view=ls.get('bs.view','dash'),lastV=null;
+/* filtros e preferências de tela */
+let q='',fc='',fsx='',flo=false,sk='qty',desc=true,pgN=1,pgS=+ls.get('bs2.ps',25)||25,pq='',cq='',cF={a:'',r:'',s:''},cV=ls.get('bs4.cv','cards'),cG=ls.get('bs6.cg',false),mq='',movTab='mov';
+let fA={},tabL='open',tabM='old',tabC='chk',tabA='d',chkS=ls.get('bs3.chk',{found:{},sala:''}),cmpR=null;
+/* desfazer / lixeira */
+let undoS=[],lastS=null,lastD=null,lastA=0,noTr=false,skipU=false;
+let camT=null,camS=null,palI=[],palS=0;
+const COL=()=>({items,cmp,per,assets,loans,maint,hw});
+const ser=()=>JSON.stringify({items,movs,per,cmp,assets,loans,maint,hw});
+
+/* =====================================================================
+   PERSISTÊNCIA, DESFAZER E LIXEIRA
+   ===================================================================== */
+function track(){
+  if(lastS===null||!user)return;const c=ser();if(c===lastS)return;
+  const lb=acts[0]&&acts[0].t!==lastA?acts[0].a+' · '+acts[0].w:'Alteração';lastA=acts[0]?acts[0].t:0;
+  if(!noTr){const C=COL();for(const k in K){const ids=new Set(C[k].map(y=>y.id));(lastD[k]||[]).forEach(x=>{if(!ids.has(x.id))trash.unshift({k,d:x,t:Date.now(),u:user.name})})}
+    if(trash.length>200)trash.length=200;
+    if(skipU)skipU=false;else{undoS.push({s:lastS,l:lb,t:Date.now()});if(undoS.length>25)undoS.shift()}}
+  lastS=c;lastD=JSON.parse(c);
+}
+function save(){
+  track();
+  ls.set('bs2.items',items);ls.set('bs2.movs',movs);ls.set('bs2.per',per);ls.set('bs2.cmp',cmp);ls.set('bs2.acts',acts);
+  ls.set('bs3.assets',assets);ls.set('bs3.loans',loans);ls.set('bs3.maint',maint);ls.set('bs3.trash',trash);ls.set('bs6.hw',hw);
+  refreshBar();
+}
+function doUndo(){const u=undoS.pop();if(!u)return toast('Nada para desfazer');const d=JSON.parse(u.s);({items,movs,per,cmp,assets,loans,maint}=d);if(Array.isArray(d.hw))hw=d.hw;
+  trash=trash.filter(t=>!COL()[t.k].some(y=>y.id===t.d.id));act('Desfez',u.l);skipU=true;save();render();toast('Desfeito: '+u.l,'ok')}
+const UNDO=['Desfazer',()=>doUndo()];
+function applyData(d){
+  if(!d||!Array.isArray(d.items)||!d.items.every(i=>i&&i.id&&i.name&&i.cat&&Number.isFinite(+i.qty)))throw new Error('backup inválido');
+  const A=x=>Array.isArray(x)?x:[];
+  items=d.items;movs=A(d.movs);per=A(d.per);cmp=A(d.cmp);acts=A(d.acts);
+  if(Array.isArray(d.assets))assets=d.assets;if(Array.isArray(d.loans))loans=d.loans;if(Array.isArray(d.maint))maint=d.maint;if(Array.isArray(d.trash))trash=d.trash;if(Array.isArray(d.hw))hw=d.hw;
+  noTr=true;save();noTr=false;undoS=[];
+}
+function snapshot(){try{const s=ls.get('bs2.snaps',[]),k=new Date().toISOString().slice(0,10);if(s[0]&&s[0].k===k)return;s.unshift({k,t:Date.now(),d:clone({items,movs,per,cmp,acts,assets,loans,maint,hw})});ls.set('bs2.snaps',s.slice(0,5))}catch(e){}}
+
+/* registros */
+function log(it,type,d,qty){movs.unshift({t:Date.now(),u:user.name,id:it.id,item:it.name,cat:it.cat,type,d,qty});if(movs.length>500)movs.length=500}
+function act(a,w,d,ref){acts.unshift({t:Date.now(),u:user?user.name:'—',a,w,d:d||'',ref});if(acts.length>500)acts.length=500}
+
+/* =====================================================================
+   CÁLCULOS
+   ===================================================================== */
+const total=()=>items.reduce((a,i)=>a+i.qty,0);
+const sqty=s=>items.reduce((a,i)=>a+(i.status===s?i.qty:0),0);
+const catAgg=()=>{const t=new Map();items.forEach(i=>t.set(i.cat,(t.get(i.cat)||0)+i.qty));return[...t].sort((a,b)=>b[1]-a[1])};
+const lowLim=()=>Math.max(0,+ls.get('bs2.low',3)||0);
+function lowList(){const L=lowLim(),t={},n={};items.forEach(i=>{t[i.cat]=(t[i.cat]||0)+i.qty;n[i.cat]=(n[i.cat]||0)+1});return Object.keys(t).filter(c=>t[c]<=L).map(c=>({c,q:t[c],n:n[c]})).sort((a,b)=>a.q-b.q)}
+const lowSet=()=>new Set(lowList().map(l=>l.c));
+const aF=id=>assets.find(a=>a.id===id),aC=id=>aF(id)?.code||'—';
+const aW=s=>s.war?Math.ceil((new Date(s.war+'T23:59:59')-Date.now())/864e5):null;
+const loc=s=>[s.sala,s.lab,s.setor,s.arm&&'Armário '+s.arm].filter(Boolean).join(' · ')||'—';
+const pre=c=>PF[c]||c.normalize('NFD').replace(/[^A-Za-z]/g,'').slice(0,3).toUpperCase()||'EQP';
+const aCats=()=>[...new Set(['Computador',...CATS,...assets.map(a=>a.cat)])];
+const uniq=k=>[...new Set(assets.map(a=>a[k]).filter(Boolean))].sort(cmpS);
+const isAd=()=>!!user&&user.role==='Administrador';
+const lateLoan=l=>!l.ret&&l.due<tdy();
+function nextCodes(c,n){const p=pre(c);let m=0;[...assets,...trash.filter(t=>t.k==='assets').map(t=>t.d)].forEach(a=>{const r=String(a.code).match(/^(.*)-(\d+)$/);if(r&&r[1]===p)m=Math.max(m,+r[2])});return[...Array(n)].map((_,k)=>p+'-'+String(m+k+1).padStart(3,'0'))}
+function alerts(){const a=[];
+  lowList().forEach(l=>a.push({k:l.q<=1?'er':'wa',t:`${l.c}: ${l.q} ${l.q===1?'unidade restante':'unidades restantes'}`,v:'low'}));
+  const cd=sqty('Com defeito'),cm=sqty('Em manutenção'),pm=cmp.filter(c=>c.status==='Em manutenção').length;
+  if(cd)a.push({k:'er',t:`${cd} peça(s) com defeito`,v:'man'});
+  if(cm)a.push({k:'wa',t:`${cm} peça(s) em manutenção`,v:'man'});
+  if(pm)a.push({k:'wa',t:`${pm} computador(es) em manutenção`,v:'man'});
+  items.forEach(i=>{if(i.qty===0)a.push({k:'er',t:`${i.name} sem estoque`,v:'low'})});
+  loans.filter(lateLoan).forEach(l=>a.push({k:'er',t:`Empréstimo atrasado: ${aC(l.aid)} com ${l.who}`,v:'loan'}));
+  let ex=0;assets.forEach(s=>{const w=aW(s);if(w===null||s.status==='Baixado')return;if(w<0)ex++;else if(w<=30)a.push({k:'wa',t:`${s.code}: garantia vence em ${w} dia(s)`,v:'ast'})});
+  if(ex)a.push({k:'wa',t:`${ex} equipamento(s) fora da garantia`,v:'ast'});
+  return a}
+
+/* máquinas: formatação */
+const mxN=v=>(v||'').toString().trim();
+const fRam=v=>{v=mxN(v);const m=v.match(/^(\d+)\s*\/\s*(\d+)$/);return m?`${m[1]} GB · ${m[2]} MHz`:/^\d+$/.test(v)?v+' GB':v};
+const fSsd=v=>mxN(v).split('/').map(x=>x.trim()).filter(Boolean).map(x=>/^\d+$/.test(x)?x+' GB':x).join(' + ');
+const fWin=v=>{v=mxN(v);return /^\d+$/.test(v)?'Windows '+v:v};
+const stoOf=d=>[d.ssd&&'SSD '+d.ssd,d.hd&&'HD '+d.hd].filter(Boolean).join(' · ');
+const mon=(n,c)=>n?(c?n+' #'+c:n):'';
+const locOf=c=>[...new Set([c.sala,c.andar].filter(Boolean))].join(' · ');
+const monOf=c=>[mon(c.m1,c.m1c),mon(c.m2,c.m2c)].filter(Boolean).join(' · ');
+const isVt=c=>c.sala==='VIRTUAL';
+const mxDone=c=>{const f=[c.col,c.cpu,c.ram,c.gpu,c.ssd||c.hd,c.win,c.m1,c.mouse,c.tec];return Math.round(f.filter(Boolean).length/f.length*100)};
+const mxIni=n=>mxN(n).split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+const mxNo=v=>!v||/^\s*(sem monitor|n\/?a|-|não se aplica)\s*$/i.test(v),mxMon=c=>(mxNo(c.m1)?0:1)+(mxNo(c.m2)?0:1);
+const mxOrd=s=>s==='Sem sala'?9:s==='VIRTUAL'?8:s==='RESERVA'?7:/^SPBIM/.test(s)?0:1;
+/* sequência: SPBIM001, SPBIM002… depois SPBIMSCS e por fim as virtuais (BIMVT) */
+const mxGrp=n=>/^SPBIM\d/i.test(n)?0:/^SPBIMSCS/i.test(n)?1:/^BIMVT/i.test(n)?2:3;
+const byNome=(a,b)=>mxGrp(a.nome||'')-mxGrp(b.nome||'')||cmpS(a.nome,b.nome);
+/* tabela no mesmo formato da planilha INVENTARIO › Máquinas */
+const SHC=[['nome','MÁQUINAS',150],['status','Status',230],['pat','NÚMERO',110,1],['sala','SALA',130],['andar','ANDAR',120],['ram','RAM',110],['cpu','PROCESSADOR',130],['gpu','PLACA',150],['hd','HD',90],['ssd','SSD',90],['win','WINDOWS',100],['m1','MONITOR 01',120],['m1c','CÓDIGO',80,1],['m2','MONITOR 02',120],['m2c','CÓDIGO',80,1],['mouse','MOUSE',140],['tec','TECLADO',140],['col','COLABORADOR',140],['cam','CÂMERA',100],['mpad','MOUSE PAD',100],['fone','FONE DE OUVIDO',120]];
+const STL={'Em uso':'EM VIGOR','Em estoque':'NÃO ESTÁ SENDO UTILIZADA','Em manutenção':'EM MANUTENÇÃO','Baixado':'BAIXADO'};
+const mxSC=s=>({'Em uso':'s-u','Em estoque':'s-e','Em manutenção':'s-m','Baixado':'s-b'})[s]||'s-e';
+function mxSheet(l){
+  const dl=SHC.filter(c=>c[0]!=='status'&&!c[3]).map(([k])=>`<datalist id="dl_${k}">${[...new Set(cmp.map(c=>c[k]).filter(Boolean))].sort(cmpS).map(v=>`<option value="${esc(v)}">`).join('')}</datalist>`).join('');
+  const cell=(c,[k,,w,tx])=>k==='status'
+    ?`<select class="dd ${mxSC(c.status)}" data-id="${c.id}" data-f="status" data-v="${esc(c.status)}" style="--w:${w}px" aria-label="Status de ${esc(c.nome)}">${CST.map(s=>`<option value="${s}"${s===c.status?' selected':''}>${STL[s]}</option>`).join('')}</select>`
+    :`<input class="dd${tx?' tx':''}" ${tx?'':`list="dl_${k}"`} data-id="${c.id}" data-f="${k}" data-v="${esc(c[k]||'')}" value="${esc(c[k]||'')}" style="--w:${w}px" title="${esc(c[k]||'')}" aria-label="${k==='nome'?'Máquina':esc(c.nome)+' · '+k}" autocomplete="off" spellcheck="false">`;
+  return `<p class="shh">Clique em uma célula para alterar. Escolha uma opção da lista ou digite um valor novo; a alteração é salva ao sair da célula (Enter desce para a linha de baixo, Esc desfaz).</p>
+<div class="tw sht">${dl}<table><thead><tr><th class="rn"></th>${SHC.map(([k,h],i)=>`<th class="${i?'':'c1'}">${h}</th>`).join('')}<th></th></tr></thead><tbody>
+${l.map((c,i)=>`<tr><td class="rn">${i+1}</td>${SHC.map((col,j)=>`<td class="${j?'':'c1'}">${cell(c,col)}</td>`).join('')}<td class="act">${cBtns(c)}</td></tr>`).join('')}</tbody></table></div>`}
+function mxSet(id,k,v){const c=cmp.find(x=>x.id===id);if(!c)return false;v=(v||'').trim().replace(/\s+/g,' ');
+  if(k==='nome'){v=v.toUpperCase();if(!v){toast('Informe o nome da máquina');return false}if(cmp.some(x=>x!==c&&x.nome===v)){toast('Essa máquina já está cadastrada');return false}}
+  if(k==='pat'&&v&&cmp.some(x=>x!==c&&x.pat===v)){toast('Esse número já está em '+cmp.find(x=>x!==c&&x.pat===v).nome);return false}
+  /* valor igual a uma opção existente (sem diferenciar maiúsculas) usa a grafia da lista */
+  if(v&&k!=='status'&&k!=='nome'){const ex=cmp.map(x=>x[k]).find(x=>x&&x.toLowerCase()===v.toLowerCase());if(ex)v=ex}
+  if((c[k]||'')===v)return true;
+  const h=(SHC.find(x=>x[0]===k)||[k,k])[1],o=k==='status'?STL[c[k]]:c[k];
+  c[k]=v;if(k==='hd'||k==='ssd')c.sto=stoOf(c);
+  act('Editou computador',c.nome,`${h}: ${o||'(vazio)'} → ${k==='status'?STL[v]:v||'(vazio)'}`,c.id);save();return true}
+
+/* exportações reutilizadas */
+const aRows=l=>l.map(a=>({Código:a.code,Equipamento:a.name,Categoria:a.cat,Série:a.serial,Estado:a.status,Sala:a.sala,Laboratório:a.lab,Setor:a.setor,Armário:a.arm,Responsável:a.resp,Aquisição:fd(a.buy),'Fim da garantia':fd(a.war),Observações:a.obs}));
+const ROWS={
+  inv:()=>items.map(i=>({Nome:i.name,Categoria:i.cat,Quantidade:i.qty,Status:i.status,Observações:i.obs})),
+  cmp:()=>[...cmp].sort(byNome).map(c=>{const o={Máquina:c.nome,Número:c.pat,Status:c.status,Sala:c.sala,Andar:c.andar,Colaborador:c.col,Modelo:c.modelo,Processador:c.cpu,RAM:c.ram,'Placa de vídeo':c.gpu,HD:c.hd,SSD:c.ssd,Windows:c.win,'Monitor 1':c.m1,'Código monitor 1':c.m1c,'Monitor 2':c.m2,'Código monitor 2':c.m2c,Mouse:c.mouse,Teclado:c.tec,Câmera:c.cam,'Mouse pad':c.mpad,Fone:c.fone,Observações:c.obs};if(isAd())Object.assign(o,{Login:c.login,'E-mail':c.email,'Senha do e-mail':c.epw,'Código de recuperação':c.rec});return o}),
+  per:()=>per.map(p=>({Máquina:p.m,Colaborador:p.col,Fone:p.fone,Câmera:p.cam,Observações:p.obs})),
+  mov:()=>movs.map(v=>({Data:fdt(v.t),Item:v.item,Categoria:v.cat,Tipo:v.type,Variação:v.d,Saldo:v.qty,Responsável:v.u})),
+  act:()=>acts.map(a=>({Data:fdt(a.t),Responsável:a.u,Ação:a.a,Alvo:a.w,Detalhe:a.d})),
+  ast:()=>aRows(assets),
+  loan:()=>loans.map(l=>({Código:aC(l.aid),Equipamento:aF(l.aid)?.name,'Quem retirou':l.who,Retirada:fd(l.out),Previsão:fd(l.due),Devolução:fd(l.ret),Observações:l.obs})),
+  maint:()=>maint.map(x=>({Código:aC(x.aid),Equipamento:aF(x.aid)?.name,Problema:x.prob,Técnico:x.tech,Abertura:fd(x.open),Conclusão:fd(x.close),Serviço:x.svc})),
+  hw:()=>[...hw].sort(byNome).map(h=>({Máquina:h.nome,Modelo:h.modelo,Processador:h.cpu,'Memória RAM':h.ram,Armazenamento:h.disco,'Placa de vídeo':h.gpu,Sistema:h.win,'Nº de série':h.serie}))
+};
+const FN={hw:'hardware',inv:'inventario',cmp:'inventario-maquinas',per:'perifericos',mov:'movimentacoes',act:'atividades',ast:'patrimonio',loan:'emprestimos',maint:'manutencoes'};
+const exp=k=>xl(ROWS[k](),FN[k]);
+
+/* =====================================================================
+   COMPONENTES DE INTERFACE
+   ===================================================================== */
+const chip=(t,c)=>`<span class="chip" style="color:${c};background:${c}22">${esc(t)}</span>`;
+const head=(t,s,b)=>`<div class="top"><div><h2>${t}</h2><p>${s}</p></div><div class="tools">${b||''}</div></div>`;
+const tabs=(a,c,k)=>`<div class="tabs" role="tablist">${a.map(t=>`<button role="tab" aria-selected="${t[0]===c}" class="${t[0]===c?'on':''}" data-${k}="${t[0]}">${t[1]}</button>`).join('')}</div>`;
+const opts=(a,v,all)=>(all?`<option value="">${all}</option>`:'')+a.map(x=>`<option ${x===v?'selected':''}>${esc(x)}</option>`).join('');
+const inp=(id,l,v,t,x)=>`<div class="fld"><label for="${id}">${l}</label><input id="${id}" type="${t||'text'}" value="${esc(v??'')}" ${x||''}></div>`;
+const area=(id,l,v)=>`<div class="fld"><label for="${id}">${l}</label><textarea id="${id}" rows="2">${esc(v??'')}</textarea></div>`;
+const sel=(id,l,a,v)=>`<div class="fld"><label for="${id}">${l}</label><select id="${id}">${opts(a,v)}</select></div>`;
+const acts2=(ok='Salvar',id='sv')=>`<div class="acts"><button class="btn" data-close>Cancelar</button><button class="btn p" id="${id}">${ok}</button></div>`;
+const tg=v=>v?`<span class="tag">${esc(v)}</span>`:'—';
+const catTag=c=>`<span class="tag cat">${ic(CI[c]||'box')}${esc(c)}</span>`;
+const stSel=(attr,id,v,list,colors)=>`<select data-${attr}="${id}" aria-label="Status" style="color:${colors[v]};background:${colors[v]}1f;border-color:${colors[v]}55">${opts(list,v)}</select>`;
+const mvRow=v=>`<div class="mv"><div>${esc(v.item)}<small>${esc(v.cat)} · ${esc(v.u)}</small></div><div style="text-align:right;color:${v.type==='Entrada'?'var(--ok)':v.type==='Saída'?'var(--er)':'var(--mu)'}">${v.type} ${v.d>0?'+':''}${v.d}<small>${fdt(v.t)}</small></div></div>`;
+const actRow=a=>`<div class="mv"><div>${esc(a.a)}<small>${esc(a.d||'')}${a.d?' · ':''}${esc(a.u)}</small></div><small>${fdt(a.t)}</small></div>`;
+const actCol=a=>/Exclu|Remov/.test(a)?'#f87171':/Cadastr|Restaur/.test(a)?'#34d399':'#a78bfa';
+const wChip=s=>{const d=aW(s);return d===null?'—':d<0?chip('Fora da garantia','#f87171'):d<=30?chip('Vence em '+d+'d','#fbbf24'):chip('Em garantia','#34d399')};
+function qrSvg(text){try{if(typeof qrcode!=='function')return '';const q=qrcode(0,'M');q.addData(text);q.make();return q.createSvgTag(3,2)}catch(e){return ''}}
+const selfUrl=(k,id)=>location.href.split('#')[0]+'#'+k+'='+encodeURIComponent(id);
+
+function toast(t,k,action){const d=document.createElement('div');if(k)d.className=k;d.setAttribute('role','status');
+  d.innerHTML=(k==='ok'?ic('check'):'')+'<span></span>'+(action?`<button class="lnk">${esc(action[0])}</button>`:'');d.querySelector('span').textContent=t;
+  if(action)d.querySelector('button').onclick=()=>{d.remove();action[1]()};
+  $('#toast').append(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),260)},action?5500:2800)}
+
+/* janela de confirmação (substitui confirm/prompt do navegador) */
+function ask(msg,o={}){return new Promise(res=>{const d=$('#cfm');let done=false;const I=o.input;
+  const fin=v=>{if(done)return;done=true;if(d.open)d.close();res(v)};
+  d.innerHTML=`<p>${esc(msg)}</p>${I?`<input id="cfv" type="${I.type||'text'}" value="${esc(I.value||'')}" aria-label="${esc(msg)}">`:''}<div class="acts"><button class="btn" data-r="0">Cancelar</button><button class="btn ${o.danger?'dz':'p'}" data-r="1">${esc(o.ok||'Confirmar')}</button></div>`;
+  d.querySelector('[data-r="0"]').onclick=()=>fin(I?null:false);
+  d.querySelector('[data-r="1"]').onclick=()=>fin(I?$('#cfv').value:true);
+  d.onclose=()=>fin(I?null:false);
+  d.showModal();
+  if(I){const x=$('#cfv');x.focus();x.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();fin(x.value)}}}else d.querySelector('[data-r="1"]').focus()})}
+const askDel=(t,ok='Excluir')=>ask(t,{ok,danger:true});
+
+function openDlg(h,wide){const d=$('#dlg');d.classList.toggle('wide',!!wide);d.innerHTML=h;if(!d.open)d.showModal();d.scrollTop=0;return d}
+const closeDlg=()=>{const d=$('#dlg');if(d.open)d.close()};
+
+function countUp(root){const R=reduced();$$('[data-n]',root).forEach(el=>{const n=+el.dataset.n;if(R||n<2){el.textContent=n;return}const t0=performance.now(),D=900;(function f(t){const p=Math.min(1,(t-t0)/D);el.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)})}
+const tile=(l,n,i,k)=>`<div class="tile ${k||''}">${i?ic(i):''}<span>${l}</span><b data-n="${n}">${reduced()?n:0}</b></div>`;
+const bindSearch=(el,fn)=>{el.oninput=debounce(fn)};
+
+/* =====================================================================
+   LOGIN
+   ===================================================================== */
+/* entrada só com o nome de usuário (sem senha). O campo interno "email" continua
+   sendo a chave do usuário, para manter compatíveis os perfis e fotos já salvos. */
+const users=()=>ls.get('bs.users',[]);
+const nk=s=>s.trim().replace(/\s+/g,' ').toLowerCase();
+function authUI(note){
+  if(CLOUD_CFG)return cloudAuthUI(note);
+  $('#ac').innerHTML=`<div class="pane"><h2>Entrar</h2><p class="sub">Digite seu nome de usuário para acessar o inventário.</p>${note||''}<form id="fm" novalidate>
+<div class="fld" id="f-name"><label for="name">Nome de usuário</label><input id="name" type="text" autocomplete="username" list="ul" maxlength="60"><datalist id="ul">${users().map(u=>`<option value="${esc(u.name)}">`).join('')}</datalist></div>
+<button class="btn p" id="go" type="submit">Entrar</button></form></div>`;
+  $('#fm').onsubmit=e=>{e.preventDefault();submit()};
+  setTimeout(()=>$('#name').focus(),50)}
+function bad(id,t){const f=$('#f-'+id);f.classList.add('bad');f.insertAdjacentHTML('beforeend',`<div class="err">${t}</div>`);return 1}
+function submit(){$$('.bad').forEach(f=>f.classList.remove('bad'));$$('.err').forEach(e=>e.remove());
+  const nm=$('#name').value.trim().replace(/\s+/g,' '),k=nk(nm);
+  if(nm.length<2)return bad('name','Informe seu nome de usuário.');
+  const us=users();let u=us.find(x=>nk(x.name||'')===k||x.email===k);
+  /* primeiro acesso com esse nome: cria o usuário (o primeiro do navegador vira administrador) */
+  if(!u){u={name:nm,email:k,role:us.length?'Operador':'Administrador'};ls.set('bs.users',[...us,u])}
+  enter(u)}
+function enter(u){user={name:u.name,email:u.email,role:u.role};ls.set('bs.sess',user);
+  $('#auth').classList.add('hide');$('#app').classList.remove('hide');$('#app').classList.toggle('col',rawGet('bs.col')==='1');
+  if(!PAGES[view])view='dash';lastV=null;nav();render();snapshot();
+  /* espera o leitor de QR (defer) antes de abrir links diretos */
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',deepLink,{once:true});else deepLink();
+  /* pré-carrega o Excel quando o navegador estiver ocioso */
+  (window.requestIdleCallback||setTimeout)(()=>XL().catch(()=>{}),{timeout:4000})}
+function logout(){if(CLOUD_CFG&&cloud.on){clearInterval(cloud.poll);cloud.poll=null;
+    cloudPush().finally(()=>{cloudStop();api('logout',{method:'POST',body:{}}).catch(()=>{})})}
+  user=null;ls.set('bs.sess',null);kStop();closeDlg();$('#np').classList.add('hide');$('#app').classList.add('hide');$('#auth').classList.remove('hide');authUI()}
+
+/* =====================================================================
+   NAVEGAÇÃO E ESTRUTURA
+   ===================================================================== */
+function nav(){const g=grpOf(view),cur=g?g.id:view;
+  $('#nav').innerHTML=NAV.map(n=>`<button class="nv ${n[0]===cur?'on':''}" data-v="${n[0]}" data-tip="${n[3]}" ${n[0]===cur?'aria-current="page"':''}>${ic(n[2])}<span>${n[1]}</span>${n[0]==='man'?'<em class="nb hide" data-b="man"></em>':''}</button>`).join('');
+  refreshBar()}
+function go2(v){view=v;ls.set('bs.view',v);$('#app').classList.remove('open');nav();render();window.scrollTo({top:0})}
+function grpTabs(){const g=grpOf(view),e=$('#gt');e.innerHTML=g?tabs(g.t,view,'gt'):'';e.classList.toggle('hide',!g)}
+const VIEWS={};
+function render(){const m=$('#mn'),fresh=lastV!==view;if(fresh&&lastV==='chk')kStop();lastV=view;m.className=fresh?'fresh':'';m.onchange=null;avatar();grpTabs();(VIEWS[view]||VIEWS.dash)(m)}
+function refreshBar(){if(!user)return;const n=alerts().length,b=$('#bd');if(b){b.textContent=n>9?'9+':n;b.classList.toggle('hide',!n)}
+  const e=$('.nb[data-b="man"]');if(e){const v=items.filter(i=>(i.status==='Com defeito'||i.status==='Em manutenção')&&i.qty).length+cmp.filter(c=>c.status==='Em manutenção').length+lowList().length;e.textContent=v;e.classList.toggle('hide',!v)}}
+function deepLink(){const x=location.hash.match(/^#([ica])=(.+)$/);if(!x||!user)return;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}const id=decodeURIComponent(x[2]);x[1]==='i'?hist(id):x[1]==='c'?cview(id):aview(id,'d')}
+function theme(t){document.documentElement.dataset.theme=t;ls.set('bs.theme',t);const b=$('#thm');if(b){b.innerHTML=ic(t==='light'?'moon':'sun');b.title=t==='light'?'Tema escuro':'Tema claro'}}
+function avatar(){const a=$('#av');if(!a||!user)return;const p=ls.get('bs.av.'+user.email,null);
+  a.innerHTML=p?`<img src="${p}" alt="">`:esc(user.name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase());
+  $('#who').innerHTML=`<b>${esc(user.name)}</b><small>${esc(user.role)}</small>`}
+function bellDraw(){const al=alerts();
+  $('#np').innerHTML=`<h4>Alertas</h4>${al.slice(0,8).map(a=>`<div class="al ${a.k}" data-go="${a.v}">${ic('alert')}<span>${esc(a.t)}</span></div>`).join('')||'<div class="empty sm">Tudo em ordem.</div>'}<h4>Alterações recentes</h4>${acts.slice(0,3).map(a=>`<div class="mv"><div>${esc(a.a)} · ${esc(a.w)}<small>${esc(a.u)}</small></div><small>${fdt(a.t)}</small></div>`).join('')||'<div class="empty sm">Sem alterações ainda.</div>'}`}
+
+/* busca geral (Ctrl+K) */
+function pal(){const d=$('#pal');if(d.open||$('#app').classList.contains('hide'))return;d.showModal();$('#xq').value='';palRes('');$('#xq').focus()}
+function palRes(t){t=t.toLowerCase().trim();const r=[],has=s=>s.toLowerCase().includes(t);
+  Object.entries(PAGES).forEach(([k,p])=>{if(!t||has(p[0]))r.push({ic:p[1],a:p[0],b:'Página',f:()=>go2(k)})});
+  if(t){assets.filter(a=>has([a.code,a.name,a.resp,a.sala,a.serial].join(' '))).slice(0,6).forEach(a=>r.push({ic:'tag',a:a.code+' · '+a.name,b:'Patrimônio'+(a.sala?' · '+a.sala:''),f:()=>aview(a.id,'d')}));
+    items.filter(i=>has(i.name+' '+i.cat)).slice(0,8).forEach(i=>r.push({ic:CI[i.cat]||'box',a:i.name,b:`${i.cat} · ${i.qty} un.`,f:()=>hist(i.id)}));
+    cmp.filter(c=>has([c.nome,c.pat,c.col,c.sala].join(' '))).slice(0,6).forEach(c=>r.push({ic:'pc',a:c.nome,b:'Computador'+(c.col?' · '+c.col:c.pat?' · '+c.pat:''),f:()=>cview(c.id)}));
+    per.filter(p=>has([p.m,p.col,p.fone,p.cam].join(' '))).slice(0,5).forEach(p=>r.push({ic:'hp',a:p.m,b:'Periféricos'+(p.col?' · '+p.col:''),f:()=>{pq=p.m;go2('per')}}))}
+  palI=r.slice(0,14);palS=0;palDraw()}
+function palDraw(){const b=$('#xr');b.innerHTML=palI.map((r,k)=>`<div class="pi ${k===palS?'on':''}" data-k="${k}">${ic(r.ic)}<div>${esc(r.a)}<small>${esc(r.b)}</small></div></div>`).join('')||'<div class="empty">Nada encontrado.</div>';
+  const on=b.querySelector('.pi.on');if(on)on.scrollIntoView({block:'nearest'})}
+function palGo(k){const r=palI[k];if(!r)return;$('#pal').close();r.f()}
+
+/* =====================================================================
+   DASHBOARD
+   ===================================================================== */
+VIEWS.dash=m=>{const tq=total(),by=catAgg(),mx=Math.max(1,...by.map(b=>b[1])),lw=lowSet(),al=alerts();
+  const T=[['Itens cadastrados',items.length,'box'],['Peças em estoque',tq,'inv'],['Funcionando',sqty('Funcionando'),'check'],['Com defeito',sqty('Com defeito'),'alert','er'],['Em manutenção',sqty('Em manutenção'),'wrench'],['Computadores',cmp.length,'pc'],['Máquinas com periféricos',per.length,'hp'],['Categorias em alerta',lw.size,'alert','wa']];
+  let acc=0;const segs=STS.map(s=>{const p=tq?sqty(s)/tq*100:0,r=`${SC[s]} ${acc}% ${acc+p}%`;acc+=p;return r}).join(',');
+  const d0=new Date();d0.setHours(0,0,0,0);
+  const wk=[...Array(7)].map((_,k)=>{const d=new Date(d0);d.setDate(d.getDate()-6+k);const s=d.getTime(),e=s+864e5;let i=0,o=0;movs.forEach(x=>{if(x.t>=s&&x.t<e){if(x.d>0)i+=x.d;else o-=x.d}});return{l:d.toLocaleDateString('pt-BR',{weekday:'short'}).replace('.',''),i,o}}),wm=Math.max(1,...wk.map(w=>Math.max(w.i,w.o)));
+  m.innerHTML=`<div class="pg dashp">${head('Dashboard','Calculado a partir do inventário atual.')}
+<div class="tiles">${T.map(t=>tile(...t)).join('')}</div>
+${al.length?`<div class="panel alp" style="margin-bottom:14px"><h3>Alertas <button class="lnk" data-go="low">Ver estoque baixo</button></h3>${al.slice(0,4).map(a=>`<div class="al ${a.k}" data-go="${a.v}">${ic('alert')}<span>${esc(a.t)}</span></div>`).join('')}</div>`:''}
+<div class="grid2"><div class="panel"><h3>Peças por categoria</h3><div class="cats">${by.map(b=>`<button class="cc ${lw.has(b[0])?'lw':''}" data-cat="${esc(b[0])}">${ic(CI[b[0]]||'box')}<span>${esc(b[0])}</span><b>${b[1]}</b><i style="width:${b[1]/mx*100}%"></i>${lw.has(b[0])?'<em>Estoque baixo</em>':''}</button>`).join('')}</div></div>
+<div class="panel"><h3>Estado das peças</h3><div class="donut" style="background:conic-gradient(${tq?segs:'var(--s2) 0 100%'})"><i></i><b data-n="${tq}">0</b><small>peças</small></div><div class="lg">${STS.map(s=>`<div><span><span class="dot" style="background:${SC[s]}"></span>${s}</span><b>${sqty(s)}</b></div>`).join('')}</div></div></div>
+<div class="grid2" style="margin-top:14px"><div class="panel"><h3>Movimentações · últimos 7 dias</h3><div class="wk">${wk.map(w=>`<div><div class="bb"><i style="height:${w.i/wm*100}%;background:var(--ok)" title="Entradas: ${w.i}"></i><i style="height:${w.o/wm*100}%;background:var(--er)" title="Saídas: ${w.o}"></i></div><small>${w.l}</small></div>`).join('')}</div><div class="lgd"><span><span class="dot" style="background:var(--ok)"></span>Entradas</span><span><span class="dot" style="background:var(--er)"></span>Saídas</span></div></div>
+<div class="panel"><h3>Últimas movimentações</h3>${movs.slice(0,5).map(mvRow).join('')||'<div class="empty">Nenhuma movimentação ainda. Altere uma quantidade no inventário para registrar.</div>'}</div></div></div>`;
+  $$('[data-cat]',m).forEach(b=>b.onclick=()=>{fc=b.dataset.cat;q='';fsx='';flo=false;pgN=1;go2('inv')});
+  countUp(m)};
+
+/* =====================================================================
+   SUPRIMENTO › PEÇAS
+   ===================================================================== */
+VIEWS.inv=m=>{const cats=[...new Set([...CATS,...items.map(i=>i.cat)])];
+  const th=(k,l)=>`<th class="sr" data-k="${k}" aria-sort="${sk===k?(desc?'descending':'ascending'):'none'}">${l}<span>${sk===k?(desc?' ↓':' ↑'):' ↕'}</span></th>`;
+  m.innerHTML=`<div class="pg">${head('Suprimento','<span id="cnt"></span>',`<button class="btn" id="imp">${ic('up')}Importar</button><button class="btn" id="exp">${ic('dn')}Exportar Excel</button><button class="btn p" id="new">${ic('plus')}Novo item</button>`)}
+<div class="tools"><input id="s" type="search" placeholder="Pesquisar item ou categoria" value="${esc(q)}" aria-label="Pesquisar"><select id="fc" aria-label="Categoria">${opts(cats,fc,'Todas as categorias')}</select><select id="fs" aria-label="Status">${opts(STS,fsx,'Todos os status')}</select><label class="chk"><input type="checkbox" id="fl" ${flo?'checked':''}>Só estoque baixo</label><input type="file" id="fi" accept=".xlsx,.xls,.csv" class="hide"></div>
+<div class="tw"><table><thead><tr>${th('name','Item')}${th('cat','Categoria')}${th('qty','Quantidade')}<th>Status</th><th><span class="hide">Ações</span></th></tr></thead><tbody id="tb"></tbody></table></div><div class="pgn" id="pgn"></div></div>`;
+  bindSearch($('#s'),e=>{q=e.target.value;pgN=1;invRows()});
+  $('#fc').onchange=e=>{fc=e.target.value;pgN=1;invRows()};$('#fs').onchange=e=>{fsx=e.target.value;pgN=1;invRows()};$('#fl').onchange=e=>{flo=e.target.checked;pgN=1;invRows()};
+  $$('.sr',m).forEach(h=>h.onclick=()=>{if(sk===h.dataset.k)desc=!desc;else{sk=h.dataset.k;desc=sk==='qty'}pgN=1;VIEWS.inv(m)});
+  $('#new').onclick=()=>form();$('#imp').onclick=()=>$('#fi').click();$('#fi').onchange=importF;$('#exp').onclick=()=>exp('inv');
+  /* um único ouvinte para toda a tabela */
+  const F=id=>items.find(i=>i.id===id),tb=$('#tb');
+  tb.onclick=async e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+    if(d.d)setQty(d.d,F(d.d).qty-1);else if(d.u)setQty(d.u,F(d.u).qty+1);else if(d.e)form(d.e);else if(d.h)hist(d.h);
+    else if(d.x){const it=F(d.x);if(!await askDel(`Excluir "${it.name}"?`))return;if(it.qty)log(it,'Saída',-it.qty,0);act('Excluiu',it.name,`${it.qty} un. · ${it.cat}`,it.id);items=items.filter(i=>i!==it);save();invRows();toast('Item movido para a lixeira','ok',UNDO)}};
+  tb.onchange=e=>{const t=e.target,d=t.dataset;if(d.q)setQty(d.q,t.value);else if(d.s){const it=F(d.s),o=it.status;it.status=t.value;act('Alterou status',it.name,`${o} → ${t.value}`,it.id);save();invRows();toast('Status atualizado','ok')}};
+  $('#pgn').onclick=e=>{if(e.target.id==='pp'){pgN--;invRows()}else if(e.target.id==='pn'){pgN++;invRows()}};
+  $('#pgn').onchange=e=>{if(e.target.id==='ps'){pgS=+e.target.value;ls.set('bs2.ps',pgS);pgN=1;invRows()}};
+  invRows()};
+function invRows(){const tb=$('#tb');if(!tb||view!=='inv')return;const lw=lowSet(),t=q.toLowerCase(),dir=desc?-1:1;
+  const l=items.filter(i=>(!t||(i.name+' '+i.cat).toLowerCase().includes(t))&&(!fc||i.cat===fc)&&(!fsx||i.status===fsx)&&(!flo||lw.has(i.cat)||i.qty===0));
+  l.sort((a,b)=>sk==='qty'?(a.qty-b.qty)*dir:sk==='cat'?(cmpS(a.cat,b.cat)||cmpS(a.name,b.name))*dir:cmpS(a.name,b.name)*dir);
+  const pages=Math.max(1,Math.ceil(l.length/pgS));pgN=Math.min(Math.max(1,pgN),pages);const v=l.slice((pgN-1)*pgS,pgN*pgS);
+  $('#cnt').textContent=`${l.length} de ${items.length} itens`;
+  tb.innerHTML=v.map(i=>`<tr><td><button class="nm" data-h="${i.id}">${esc(i.name)}</button>${i.obs?`<small class="ob">${esc(i.obs)}</small>`:''}</td><td>${catTag(i.cat)}</td><td><span class="q"><button data-d="${i.id}" aria-label="Diminuir">−</button><input type="number" min="0" value="${i.qty}" data-q="${i.id}" aria-label="Quantidade de ${esc(i.name)}"><button data-u="${i.id}" aria-label="Aumentar">+</button></span>${i.qty===0?'<span class="bd er">Zerado</span>':lw.has(i.cat)?'<span class="bd wa">Baixo</span>':''}</td><td class="st">${stSel('s',i.id,i.status,STS,SC)}</td><td class="act"><button class="btn i" data-h="${i.id}" aria-label="Histórico e QR Code" title="Histórico e QR Code">${ic('hist')}</button> <button class="btn i" data-e="${i.id}" aria-label="Editar" title="Editar">${ic('edit')}</button> <button class="btn i d" data-x="${i.id}" aria-label="Excluir" title="Excluir">${ic('tr')}</button></td></tr>`).join('')||`<tr><td colspan="5" class="empty">Nenhum item encontrado.</td></tr>`;
+  $('#pgn').innerHTML=`<span>Mostrando ${l.length?(pgN-1)*pgS+1:0}–${Math.min(pgN*pgS,l.length)} de ${l.length}</span><div><select id="ps" aria-label="Itens por página">${[10,25,50,100].map(n=>`<option value="${n}" ${n===pgS?'selected':''}>${n} por página</option>`).join('')}</select><button class="btn i" id="pp" aria-label="Página anterior" ${pgN<=1?'disabled':''}>‹</button><b>${pgN}/${pages}</b><button class="btn i" id="pn" aria-label="Próxima página" ${pgN>=pages?'disabled':''}>›</button></div>`}
+function setQty(id,n){const it=items.find(i=>i.id===id);if(!it)return;n=Math.max(0,Math.floor(+n)||0);const d=n-it.qty;if(d){const o=it.qty;it.qty=n;log(it,d>0?'Entrada':'Saída',d,n);act('Alterou quantidade',it.name,`${o} → ${n}`,it.id);save()}view==='inv'?invRows():render()}
+function form(id){const it=items.find(i=>i.id===id)||{name:'',cat:CATS[0],qty:0,status:'Não testado',obs:''};
+  const d=openDlg(`<h3>${id?'Editar item':'Novo item'}</h3>${inp('n','Nome',it.name)}<div class="fld"><label for="c">Categoria</label><input id="c" list="cl" value="${esc(it.cat)}"><datalist id="cl">${CATS.map(c=>`<option>${esc(c)}</option>`).join('')}</datalist></div>${inp('qt','Quantidade',it.qty,'number','min="0"')}${sel('st','Status',STS,it.status)}${area('ob','Observações / defeitos (opcional)',it.obs)}${acts2()}`);
+  $('#n').focus();
+  $('#sv').onclick=()=>{const n=$('#n').value.trim(),c=$('#c').value.trim();if(!n||!c)return toast('Preencha nome e categoria');const qt=Math.max(0,Math.floor(+$('#qt').value)||0),st=$('#st').value,ob=$('#ob').value;
+    if(id){const ch=[];if(it.name!==n)ch.push(`nome: ${it.name} → ${n}`);if(it.cat!==c)ch.push(`categoria: ${it.cat} → ${c}`);if(it.status!==st)ch.push(`status: ${it.status} → ${st}`);if((it.obs||'')!==ob)ch.push('observações editadas');const df=qt-it.qty;if(df)ch.push(`quantidade: ${it.qty} → ${qt}`);
+      Object.assign(it,{name:n,cat:c,status:st,obs:ob});if(df){it.qty=qt;log(it,df>0?'Entrada':'Saída',df,qt)}if(ch.length)act('Editou',n,ch.join('; '),it.id)}
+    else{const ni={id:'i'+Date.now(),name:n,cat:c,qty:qt,status:st,obs:ob,created:Date.now()};items.push(ni);if(qt)log(ni,'Entrada',qt,qt);act('Cadastrou',n,`${c} · ${qt} un.`,ni.id)}
+    save();d.close();render();toast(id?'Item atualizado com sucesso!':'Item cadastrado com sucesso!','ok')}}
+function hist(id){const it=items.find(i=>i.id===id);if(!it)return toast('Item não encontrado');
+  const mv=movs.filter(v=>v.id?v.id===id:v.item===it.name&&v.cat===it.cat),ac=acts.filter(a=>a.ref===id);
+  const d=openDlg(`<div class="hh"><div><h3>${esc(it.name)}</h3>${catTag(it.cat)} ${chip(it.status,SC[it.status])}</div><div class="qr">${qrSvg(selfUrl('i',id))}<small>QR da ficha</small></div></div>
+<div class="kv"><div><small>Quantidade</small><b>${it.qty}</b></div><div><small>Cadastro</small><b>${it.created?fdt(it.created):'Inventário inicial'}</b></div><div><small>Movimentações</small><b>${mv.length}</b></div></div>
+${it.obs?`<div class="note"><small>Observações / defeitos</small>${esc(it.obs)}</div>`:''}
+<h4>Entradas e saídas</h4>${mv.slice(0,8).map(mvRow).join('')||'<div class="empty sm">Nenhuma movimentação registrada.</div>'}
+<h4>Histórico de alterações</h4>${ac.slice(0,8).map(actRow).join('')||'<div class="empty sm">Sem alterações registradas.</div>'}
+<div class="acts"><button class="btn" data-close>Fechar</button><button class="btn p" id="he">${ic('edit')}Editar</button></div>`,true);
+  $('#he').onclick=()=>form(id)}
+async function importF(e){const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const rs=await readSheet(f);let a=0,u=0;
+    for(const r of rs){const n=String(col(r,'nome','item')).trim(),c=String(col(r,'categoria')).trim();if(!n||!c)continue;
+      const qt=Math.max(0,Math.floor(+col(r,'quantidade','qtd'))||0),s=STS.find(x=>x.toLowerCase()===String(col(r,'status')).trim().toLowerCase())||'Não testado',ex=items.find(i=>i.name.toLowerCase()===n.toLowerCase()&&i.cat.toLowerCase()===c.toLowerCase());
+      if(ex){if(qt!==ex.qty){log(ex,qt>ex.qty?'Entrada':'Saída',qt-ex.qty,qt);ex.qty=qt}ex.status=s;u++}
+      else{const ni={id:'i'+Date.now()+'_'+a,name:n,cat:c,qty:qt,status:s,obs:String(col(r,'observações','observacoes')),created:Date.now()};items.push(ni);if(qt)log(ni,'Entrada',qt,qt);a++}}
+    if(a||u)act('Importou planilha',f.name,`${a} novos, ${u} atualizados`);save();render();toast(`${a} novos, ${u} atualizados`,'ok',a||u?UNDO:null)}
+  catch(x){toast('Não foi possível ler o arquivo. Use .xlsx ou .csv com colunas Nome e Categoria.')}}
+
+/* =====================================================================
+   SUPRIMENTO › PERIFÉRICOS
+   ===================================================================== */
+VIEWS.per=m=>{m.innerHTML=`<div class="pg">${head('Periféricos','<span id="pc2"></span>',`<button class="btn" id="ex">${ic('dn')}Exportar Excel</button><button class="btn p" id="new">${ic('plus')}Adicionar máquina</button>`)}<div class="tools"><input id="s" type="search" placeholder="Pesquisar máquina, colaborador ou código" value="${esc(pq)}" aria-label="Pesquisar"></div><div class="tw"><table><thead><tr><th>Máquina</th><th>Colaborador</th><th>Fone</th><th>Câmera</th><th>Observações</th><th></th></tr></thead><tbody id="tb"></tbody></table></div></div>`;
+  $('#new').onclick=()=>pform();$('#ex').onclick=()=>exp('per');
+  const r=()=>{pq=$('#s').value;const t=pq.toLowerCase(),l=per.filter(p=>[p.m,p.col,p.fone,p.cam].join(' ').toLowerCase().includes(t)).sort((a,b)=>cmpS(a.m,b.m));$('#pc2').textContent=`${l.length} de ${per.length} máquinas`;
+    $('#tb').innerHTML=l.map(p=>`<tr><td><button class="nm" data-pe="${p.id}">${esc(p.m)}</button></td><td>${esc(p.col||'—')}</td><td>${tg(p.fone)}</td><td>${tg(p.cam)}</td><td>${esc(p.obs||'—')}</td><td class="act"><button class="btn i" data-pe="${p.id}" aria-label="Editar">${ic('edit')}</button> <button class="btn i d" data-px="${p.id}" aria-label="Excluir">${ic('tr')}</button></td></tr>`).join('')||`<tr><td colspan="6" class="empty">${per.length?'Nenhuma máquina encontrada.':'Nenhuma máquina cadastrada. Use Adicionar máquina para vincular fone e câmera.'}</td></tr>`};
+  $('#tb').onclick=async e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.pe)pform(b.dataset.pe);else if(b.dataset.px){const p=per.find(x=>x.id===b.dataset.px);if(!await askDel(`Remover ${p.m} dos periféricos?`,'Remover'))return;act('Excluiu periféricos',p.m,'',p.id);per=per.filter(x=>x!==p);save();r();toast('Máquina removida','ok',UNDO)}};
+  bindSearch($('#s'),r);r()};
+function pform(id){const p=per.find(x=>x.id===id)||{m:'',col:'',fone:'',cam:'',obs:''};
+  const d=openDlg(`<h3>${id?'Editar máquina':'Adicionar máquina'}</h3>${inp('pm','Máquina',p.m,'text','placeholder="SPBIM001"')}${inp('pc','Colaborador (opcional)',p.col)}${inp('pf','Fone de ouvido (código)',p.fone,'text','placeholder="FON-01"')}${inp('pa','Câmera (código)',p.cam,'text','placeholder="CAM-01"')}${area('po','Observações (opcional)',p.obs)}${acts2()}`);
+  $('#pm').focus();
+  $('#sv').onclick=()=>{const v=i=>$(i).value.trim(),n={m:v('#pm').toUpperCase(),col:v('#pc'),fone:v('#pf').toUpperCase(),cam:v('#pa').toUpperCase(),obs:v('#po')};
+    if(!n.m)return toast('Informe o nome da máquina');const o=per.filter(x=>x.id!==id);
+    if(o.some(x=>x.m===n.m))return toast('Essa máquina já está cadastrada');
+    for(const[k,l]of[['fone','Fone'],['cam','Câmera']]){const u=n[k]&&o.find(x=>x[k]===n[k]);if(u)return toast(`${l} ${n[k]} já está em ${u.m}`)}
+    if(id){Object.assign(p,n);act('Editou periféricos',n.m,'',id)}else{const np={id:'p'+Date.now(),...n};per.push(np);act('Cadastrou periféricos',n.m,[n.fone,n.cam].filter(Boolean).join(' · '),np.id)}
+    save();d.close();render();toast('Máquina salva','ok')}}
+
+/* =====================================================================
+   INVENTÁRIO › MÁQUINAS
+   ===================================================================== */
+const CF=[['Identificação',[['nome','Máquina','SPBIM001 (RVT)'],['pat','Nº de série / patrimônio','Número de série'],['col','Colaborador'],['sala','Sala','SPBIM 301'],['andar','Andar','3º']]],
+['Hardware',[['modelo','Modelo / fabricante'],['cpu','Processador'],['ram','Memória RAM'],['gpu','Placa de vídeo'],['hd','HD'],['ssd','SSD'],['win','Windows']]],
+['Periféricos',[['m1','Monitor 1'],['m1c','Código do monitor 1'],['m2','Monitor 2'],['m2c','Código do monitor 2'],['mouse','Mouse'],['tec','Teclado'],['cam','Câmera'],['mpad','Mouse pad'],['fone','Fone de ouvido']]],
+['Acesso · somente administradores',[['login','Login'],['email','E-mail'],['epw','Senha do e-mail'],['rec','Código de recuperação']]]];
+const cBtns=c=>`<button class="btn i" data-cv="${c.id}" aria-label="Ficha e QR Code" title="Ficha e QR Code">${ic('qr')}</button><button class="btn i" data-ce="${c.id}" aria-label="Editar" title="Editar">${ic('edit')}</button><button class="btn i d" data-cx="${c.id}" aria-label="Excluir" title="Excluir">${ic('tr')}</button>`;
+const mxCard=(c,i)=>{const sc=CSC[c.status]||'#8b92a3',vt=isVt(c),p=mxDone(c);
+  const sp=[['Modelo',c.modelo,1],['Processador',c.cpu,1],['Memória RAM',fRam(c.ram)],['Placa de vídeo',c.gpu],['SSD',fSsd(c.ssd)],['Armazenamento',c.hd],['Sistema',fWin(c.win)]].filter(x=>x[1]);
+  const pe=[['Monitor 1',mxNo(c.m1)?'':mon(c.m1,c.m1c)],['Monitor 2',mxNo(c.m2)?'':mon(c.m2,c.m2c)],['Mouse',c.mouse],['Teclado',c.tec],['Câmera',c.cam],['Fone',c.fone],['Mouse pad',c.mpad]].filter(x=>x[1]);
+  return `<article class="mxc" style="--sc:${sc};animation-delay:${Math.min(i,12)*30}ms" data-cv="${c.id}" tabindex="0" aria-label="Abrir ficha de ${esc(c.nome)}"><header><div><h4>${esc(c.nome)}${vt?'<span class="mxb">Virtual</span>':''}</h4><small>${c.pat?'Nº '+esc(c.pat):'Sem número'}${locOf(c)&&!vt?' · '+esc(locOf(c)):''}</small></div>${chip(c.status,sc)}</header>
+<div class="mxo ${c.col?'':'no'}"><span class="mxa ${c.col?'':'no'}">${c.col?esc(mxIni(c.col)):'–'}</span>${esc(c.col||'Sem colaborador')}</div>
+${vt?'<div class="mx0">Máquina virtual · sem hardware físico</div>':sp.length?`<div class="mxs">${sp.map(x=>`<div class="${x[2]?'w2':''}"><small>${x[0]}</small><b>${esc(x[1])}</b></div>`).join('')}</div>`:'<div class="mx0">Hardware ainda não cadastrado</div>'}
+${!vt&&pe.length?`<div class="mxp">${pe.map(x=>`<span><em>${x[0]}</em>${esc(x[1])}</span>`).join('')}</div>`:''}
+<div class="mxf">${vt?'<div class="mxr"></div>':`<div class="mxr"><small>Ficha ${p}% preenchida</small><div><i style="width:${p}%"></i></div></div>`}${cBtns(c)}</div></article>`};
+VIEWS.cmp=m=>{const U=k=>[...new Set(cmp.map(c=>c[k]).filter(Boolean))].sort(cmpS),n=s=>cmp.filter(c=>c.status===s).length,mons=cmp.reduce((a,c)=>a+mxMon(c),0),salas=new Set(cmp.map(c=>c.sala).filter(s=>s&&s!=='VIRTUAL'&&s!=='N/A')).size;
+  m.innerHTML=`<div class="pg">${head('Inventário','<span id="cc2"></span>',`<button class="btn" id="ex">${ic('dn')}Exportar Excel</button><button class="btn p" id="new">${ic('plus')}Cadastrar máquina</button>`)}
+<div class="tiles" id="mxti" style="grid-template-columns:repeat(auto-fit,minmax(125px,1fr))">${[['Máquinas',cmp.length],['Em uso',n('Em uso')],['Em estoque',n('Em estoque')],['Em manutenção',n('Em manutenção')],['Baixadas',n('Baixado')],['Monitores',mons],['Salas',salas]].map(t=>tile(t[0],t[1])).join('')}</div>
+<div class="tools"><input class="wd" id="s" type="search" placeholder="Pesquisar máquina, sala, colaborador, monitor…" value="${esc(cq)}" aria-label="Pesquisar"><select id="fs" aria-label="Status">${opts(CST,cF.s,'Todos os status')}</select><select id="fa" aria-label="Andar">${opts(U('andar'),cF.a,'Todos os andares')}</select><select id="fr" aria-label="Sala">${opts(U('sala'),cF.r,'Todas as salas')}</select><label class="chk ${cV==='cards'?'':'hide'}"><input type="checkbox" id="fg" ${cG?'checked':''}>Agrupar por sala</label><div class="mxv" role="group" aria-label="Modo de exibição"><button id="vc" class="${cV==='cards'?'on':''}" aria-pressed="${cV==='cards'}">Cartões</button><button id="vt" class="${cV==='cards'?'':'on'}" aria-pressed="${cV!=='cards'}">Tabela</button></div></div><div id="mxb"></div></div>`;
+  $('#new').onclick=()=>cform();$('#ex').onclick=()=>exp('cmp');
+  const r=()=>{cq=$('#s').value;cF={s:$('#fs').value,a:$('#fa').value,r:$('#fr').value};if(cG!==$('#fg').checked){cG=$('#fg').checked;ls.set('bs6.cg',cG)}const t=cq.toLowerCase();
+    const l=cmp.filter(c=>(!cF.s||c.status===cF.s)&&(!cF.a||c.andar===cF.a)&&(!cF.r||c.sala===cF.r)&&(!t||[c.nome,c.pat,c.col,c.sala,c.andar,c.modelo,c.cpu,c.hd,c.ssd,c.gpu,c.m1,c.m1c,c.m2,c.m2c,c.mouse,c.tec,c.cam,c.fone].join(' ').toLowerCase().includes(t))).sort(byNome);
+    $('#cc2').textContent=`${l.length} de ${cmp.length} máquinas`;let h;
+    if(!l.length)h=`<div class="panel empty">${cmp.length?'Nenhuma máquina encontrada.':'Nenhuma máquina cadastrada.'}</div>`;
+    else if(cV==='cards'){if(cG){const g={};l.forEach(c=>(g[c.sala||'Sem sala']=g[c.sala||'Sem sala']||[]).push(c));
+        h=Object.keys(g).sort((a,b)=>mxOrd(a)-mxOrd(b)||cmpS(a,b)).map(k=>`<div class="mxh">${esc(k)} <small>${g[k].length} ${g[k].length>1?'máquinas':'máquina'}${g[k][0].andar&&g[k][0].andar!==k?' · '+esc(g[k][0].andar):''}</small></div><div class="mxg">${g[k].map(mxCard).join('')}</div>`).join('')}
+      else h=`<div class="mxg">${l.map(mxCard).join('')}</div>`}
+    else h=mxSheet(l);
+    $('#mxb').innerHTML=h};
+  const box=$('#mxb');
+  /* edição direto na tabela: grava ao sair da célula ou ao escolher uma opção */
+  box.onchange=e=>{const el=e.target.closest('.dd');if(!el)return;
+    const ok=mxSet(el.dataset.id,el.dataset.f,el.value);
+    if(!ok){el.value=el.dataset.v;return}
+    const cc=cmp.find(x=>x.id===el.dataset.id);el.value=el.dataset.v=cc[el.dataset.f]||'';el.title=el.value;if(el.tagName==='SELECT')el.className='dd '+mxSC(el.value);
+    el.classList.add('sv');setTimeout(()=>el.classList.remove('sv'),700);
+    if(el.dataset.f==='status'||el.dataset.f==='sala'||el.dataset.f==='m1'||el.dataset.f==='m2'){const n=s=>cmp.filter(c=>c.status===s).length,v=[cmp.length,n('Em uso'),n('Em estoque'),n('Em manutenção'),n('Baixado'),cmp.reduce((a,c)=>a+mxMon(c),0),new Set(cmp.map(c=>c.sala).filter(s=>s&&s!=='VIRTUAL'&&s!=='N/A')).size];
+      $$('#mxti .tile b').forEach((b,i)=>{b.dataset.n=v[i];b.textContent=v[i]})}};
+  box.addEventListener('keydown',e=>{const el=e.target.closest('input.dd');if(!el)return;
+    if(e.key==='Escape'){el.value=el.dataset.v;el.blur();return}
+    if(e.key==='Enter'){e.preventDefault();const tr=el.closest('tr'),i=[...tr.children].indexOf(el.closest('td')),nx=e.shiftKey?tr.previousElementSibling:tr.nextElementSibling;
+      const t=nx&&nx.children[i]&&nx.children[i].querySelector('.dd');if(t){t.focus();t.select&&t.select()}else el.blur()}});
+  box.onclick=async e=>{const b=e.target.closest('[data-cv],[data-ce],[data-cx]');if(!b)return;const d=b.dataset;
+    if(d.ce)cform(d.ce);else if(d.cx){const c=cmp.find(x=>x.id===d.cx);if(!await askDel(`Excluir a máquina ${c.nome}?`))return;act('Excluiu computador',c.nome,c.pat?'Nº '+c.pat:'',c.id);cmp=cmp.filter(x=>x!==c);save();render();toast('Máquina movida para a lixeira','ok',UNDO)}else cview(d.cv)};
+  box.onkeydown=e=>{if(e.key==='Enter'&&e.target.tagName==='ARTICLE')cview(e.target.dataset.cv)};
+  bindSearch($('#s'),r);$('#fs').onchange=r;$('#fa').onchange=r;$('#fr').onchange=r;$('#fg').onchange=r;
+  $('#vc').onclick=()=>{cV='cards';ls.set('bs4.cv',cV);VIEWS.cmp(m)};$('#vt').onclick=()=>{cV='table';ls.set('bs4.cv',cV);VIEWS.cmp(m)};
+  countUp(m);r()};
+function cform(id){const c=cmp.find(x=>x.id===id)||{status:'Em uso'},ad=isAd();
+  const F=(k,l,ph)=>`<div class="fld"><label for="c_${k}">${l}</label><input id="c_${k}" placeholder="${esc(ph||'')}" value="${esc(c[k]||'')}"></div>`;
+  const d=openDlg(`<h3>${id?'Editar máquina':'Cadastrar máquina'}</h3>${CF.map(([g,f],i)=>i===3&&!ad?'':`<div class="fh">${g}</div><div class="f2">${f.map(x=>F(...x)).join('')}${i===0?sel('c_status','Status',CST,c.status):''}</div>`).join('')}${area('c_obs','Observações (opcional)',c.obs)}${acts2()}`,true);
+  $('#c_nome').focus();
+  $('#sv').onclick=()=>{const v=k=>$('#c_'+k).value.trim(),n={status:$('#c_status').value,obs:v('obs')};CF.forEach(([g,f],i)=>{if(i===3&&!ad)return;f.forEach(x=>n[x[0]]=v(x[0]))});n.nome=n.nome.toUpperCase();n.sto=stoOf({...c,...n});
+    if(!n.nome)return toast('Informe o nome da máquina');const o=cmp.filter(x=>x.id!==id);
+    if(o.some(x=>x.nome===n.nome))return toast('Essa máquina já está cadastrada');
+    if(n.pat&&o.some(x=>x.pat===n.pat))return toast('Esse número já está em '+o.find(x=>x.pat===n.pat).nome);
+    if(id){const ch=[];['status','sala','andar','col'].forEach(k=>{if((c[k]||'')!==(n[k]||''))ch.push(`${k==='col'?'colaborador':k}: ${c[k]||'—'} → ${n[k]||'—'}`)});Object.assign(c,n);act('Editou computador',n.nome,ch.join('; '),id)}
+    else{const nc={id:'c'+Date.now(),created:Date.now(),...n};cmp.push(nc);act('Cadastrou computador',n.nome,n.pat?'Nº '+n.pat:'',nc.id)}
+    save();d.close();render();toast(id?'Máquina atualizada com sucesso!':'Máquina cadastrada com sucesso!','ok')}}
+function cview(id){const c=cmp.find(x=>x.id===id);if(!c)return toast('Máquina não encontrada');const ad=isAd(),ac=acts.filter(a=>a.ref===id).slice(0,5);
+  const R=(l,v)=>v?`<div class="mv"><div><small>${l}</small>${esc(v)}</div></div>`:'',H=t=>`<div class="fh">${t}</div>`,
+  S=(l,v)=>v?`<div class="mv"><div><small>${l}</small><span class="pw" data-pw="${esc(v)}">••••••••</span></div><button class="btn" data-rv>Mostrar</button></div>`:'';
+  const d=openDlg(`<div class="hh"><div><h3>${esc(c.nome)}</h3>${chip(c.status,CSC[c.status]||'#8b92a3')}</div><div class="qr">${qrSvg(selfUrl('c',id))}<small>QR da ficha</small></div></div>${H('Identificação')}${R('Nº de série / patrimônio',c.pat)}${R('Local',locOf(c))}${R('Colaborador',c.col)}${H('Hardware')}${R('Modelo / fabricante',c.modelo)}${R('Processador',c.cpu)}${R('Memória RAM',c.ram)}${R('Placa de vídeo',c.gpu)}${R('Armazenamento',c.hd)}${R('SSD',c.ssd)}${R('Windows',c.win)}${H('Periféricos')}${R('Monitor 1',mon(c.m1,c.m1c))}${R('Monitor 2',mon(c.m2,c.m2c))}${R('Mouse',c.mouse)}${R('Teclado',c.tec)}${R('Câmera',c.cam)}${R('Mouse pad',c.mpad)}${R('Fone de ouvido',c.fone)}${H('Acesso')}${ad?`${R('Login',c.login)}${R('E-mail',c.email)}${S('Senha do e-mail',c.epw)}${S('Código de recuperação',c.rec)}`:'<div class="sm2">Restrito a administradores.</div>'}${R('Cadastro',c.created?fdt(c.created):'')}${R('Observações',c.obs)}${ac.length?`<h4>Histórico</h4>${ac.map(actRow).join('')}`:''}<div class="acts"><button class="btn" data-close>Fechar</button><button class="btn p" id="he">${ic('edit')}Editar</button></div>`,true);
+  $$('[data-rv]',d).forEach(b=>b.onclick=()=>{const p=b.previousElementSibling.querySelector('.pw'),sh=b.textContent==='Mostrar';p.textContent=sh?p.dataset.pw:'••••••••';b.textContent=sh?'Ocultar':'Mostrar'});
+  $('#he').onclick=()=>cform(id)}
+
+/* =====================================================================
+   INVENTÁRIO › PATRIMÔNIO
+   ===================================================================== */
+/* =====================================================================
+   INVENTÁRIO › HARDWARE (especificações coletadas de cada máquina)
+   ===================================================================== */
+let hq='',hS='';
+const HWF=[['nome','Máquina','SPBIM001'],['modelo','Modelo','Dell Inc. XPS 8700'],['cpu','Processador'],['ram','Memória RAM','32 GB (4 módulo(s))'],['disco','Armazenamento','Discos separados por " · "'],['gpu','Placa de vídeo'],['win','Sistema','Microsoft Windows 10 Pro 19045'],['serie','Nº de série']];
+const hwBase=n=>(n||'').toUpperCase().replace(/\s*\(.*\)\s*$/,'').trim();
+const hwMach=h=>cmp.find(c=>hwBase(c.nome)===h.nome||(c.pat||'').toUpperCase()===h.nome);
+/* placeholders do fabricante não são números de série de verdade */
+const hwSerie=s=>/^(to be filled by o\.?e\.?m\.?|default string|system serial number)$/i.test(s||'')?'':s;
+const hwSys=w=>!w?'Não informado':/Server/i.test(w)?'Windows Server':/Windows 11/i.test(w)?'Windows 11':/Windows 10/i.test(w)?'Windows 10':'Outro';
+const hwRam=r=>{const x=/([\d.,]+)\s*GB/i.exec(r||'');return x?parseFloat(x[1].replace(',','.')):0};
+/* discos: esconde os leitores de cartão vazios (0 GB) que o Windows lista como unidades */
+const hwDisks=d=>(d||'').split(' · ').map(s=>s.trim()).filter(s=>s&&!/\s0 GB/.test(s));
+const NI='<span class="ni">não informado</span>';
+VIEWS.hw=m=>{const sy=s=>hw.filter(h=>hwSys(h.win)===s).length,vt=hw.filter(h=>/^BIMVT/.test(h.nome)).length;
+  m.innerHTML=`<div class="pg">${head('Hardware','<span id="hc"></span>',`<button class="btn" id="hx">${ic('dn')}Exportar Excel</button><button class="btn p" id="hn">${ic('plus')}Adicionar</button>`)}
+<div class="tiles" style="grid-template-columns:repeat(auto-fit,minmax(125px,1fr))">${[['Máquinas',hw.length],['Físicas',hw.length-vt],['Virtuais',vt],['Windows 11',sy('Windows 11')],['Windows 10',sy('Windows 10')],['Sem informação',hw.filter(h=>!h.cpu&&!h.modelo).length]].map(t=>tile(t[0],t[1])).join('')}</div>
+<div class="tools"><input class="wd" id="hs" type="search" placeholder="Pesquisar máquina, modelo, processador, placa, série…" value="${esc(hq)}" aria-label="Pesquisar"><select id="hy" aria-label="Sistema">${opts(['Windows 11','Windows 10','Windows Server','Não informado'],hS,'Todos os sistemas')}</select></div><div id="hb"></div></div>`;
+  const r=()=>{hq=$('#hs').value;hS=$('#hy').value;const t=hq.toLowerCase();
+    const l=hw.filter(h=>(!hS||hwSys(h.win)===hS)&&(!t||HWF.map(f=>h[f[0]]).join(' ').toLowerCase().includes(t))).sort(byNome);
+    $('#hc').textContent=`${l.length} de ${hw.length} máquinas`;
+    $('#hb').innerHTML=!l.length?`<div class="panel empty">${hw.length?'Nenhuma máquina encontrada.':'Nenhum hardware cadastrado.'}</div>`
+    :`<div class="tw sht hwt"><table><thead><tr><th class="rn"></th><th class="c1">MÁQUINA</th><th>MODELO</th><th>PROCESSADOR</th><th>MEMÓRIA RAM</th><th>ARMAZENAMENTO</th><th>PLACA DE VÍDEO</th><th>SISTEMA</th><th>Nº DE SÉRIE</th><th>NO INVENTÁRIO</th><th></th></tr></thead><tbody>
+${l.map((h,i)=>{const c=hwMach(h),dk=hwDisks(h.disco),sr=hwSerie(h.serie);return `<tr><td class="rn">${i+1}</td><td class="c1"><b>${esc(h.nome)}</b></td><td>${h.modelo?esc(h.modelo):NI}</td><td class="w">${h.cpu?esc(h.cpu):NI}</td><td>${h.ram?esc(h.ram):NI}</td>
+<td class="w">${dk.length?`<div class="hwd">${dk.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:NI}</td><td class="w">${h.gpu?esc(h.gpu).replace(/ · /g,'<br>'):NI}</td><td>${h.win?esc(h.win):NI}</td><td class="mono">${sr?esc(sr):NI}</td>
+<td>${c?`<button class="nm" data-cv="${c.id}">${esc(c.nome)}</button><small class="ob">${esc([c.sala,c.col].filter(Boolean).join(' · ')||'—')}</small>`:'<span class="ni">não cadastrada</span>'}</td>
+<td class="act"><button class="btn i" data-he="${h.id}" aria-label="Editar ${esc(h.nome)}">${ic('edit')}</button><button class="btn i d" data-hx="${h.id}" aria-label="Excluir ${esc(h.nome)}">${ic('tr')}</button></td></tr>`}).join('')}</tbody></table></div>`};
+  $('#hb').onclick=async e=>{const b=e.target.closest('[data-cv],[data-he],[data-hx]');if(!b)return;const d=b.dataset;
+    if(d.cv)cview(d.cv);else if(d.he)hform(d.he);else{const h=hw.find(x=>x.id===d.hx);if(!await askDel(`Excluir o hardware de ${h.nome}?`))return;act('Excluiu hardware',h.nome,'',h.id);hw=hw.filter(x=>x!==h);save();render();toast('Movido para a lixeira','ok',UNDO)}};
+  $('#hn').onclick=()=>hform();$('#hx').onclick=()=>exp('hw');
+  bindSearch($('#hs'),r);$('#hy').onchange=r;countUp(m);r()};
+function hform(id){const h=hw.find(x=>x.id===id)||{};
+  const d=openDlg(`<h3>${id?'Editar hardware':'Adicionar hardware'}</h3><div class="f2">${HWF.map(([k,l,ph])=>`<div class="fld${k==='disco'||k==='cpu'?' w2':''}"><label for="h_${k}">${l}</label><input id="h_${k}" placeholder="${esc(ph||'')}" value="${esc(h[k]||'')}"></div>`).join('')}</div>${acts2()}`,true);
+  $('#h_nome').focus();
+  $('#sv').onclick=()=>{const n={};HWF.forEach(([k])=>n[k]=$('#h_'+k).value.trim().replace(/\s+/g,' '));n.nome=hwBase(n.nome);
+    if(!n.nome)return toast('Informe o nome da máquina');if(hw.some(x=>x.id!==id&&x.nome===n.nome))return toast('Essa máquina já está na lista de hardware');
+    if(id){Object.assign(h,n);act('Editou hardware',n.nome,'',id)}else{const nid='hw-'+uid('h');hw.push({id:nid,...n});act('Adicionou hardware',n.nome,'',nid)}
+    save();d.close();render();toast('Hardware salvo','ok')}}
+const aFil=()=>{const t=(fA.q||'').toLowerCase();return assets.filter(a=>(!t||[a.code,a.name,a.serial,a.cat,a.sala,a.lab,a.setor,a.arm,a.resp].join(' ').toLowerCase().includes(t))&&(!fA.cat||a.cat===fA.cat)&&(!fA.st||a.status===fA.st)&&(!fA.sala||a.sala===fA.sala)&&(!fA.resp||a.resp===fA.resp)&&(!fA.from||(a.buy&&a.buy>=fA.from))&&(!fA.to||(a.buy&&a.buy<=fA.to))).sort((a,b)=>cmpS(a.code,b.code))};
+VIEWS.ast=m=>{const w=assets.map(aW).filter(d=>d!==null),n=s=>assets.filter(a=>a.status===s).length;
+  m.innerHTML=`<div class="pg">${head('Patrimônio','<span id="ac2"></span>',`<button class="btn" id="aim">${ic('pc')}Importar computadores</button><button class="btn" id="aex">${ic('dn')}Exportar filtrados</button><button class="btn p" id="anw">${ic('plus')}Novo patrimônio</button>`)}
+<div class="tiles">${[['Equipamentos',assets.length,'tag'],['Emprestados',n('Emprestado'),'key'],['Em manutenção',n('Em manutenção'),'wrench','wa'],['Garantia vencendo (30d)',w.filter(d=>d>=0&&d<=30).length,'alert','wa'],['Fora da garantia',w.filter(d=>d<0).length,'alert','er']].map(t=>tile(...t)).join('')}</div>
+<div class="tools"><input class="wd" id="aq" type="search" placeholder="Código, equipamento, série, sala…" value="${esc(fA.q||'')}" aria-label="Pesquisar"><select id="acat" aria-label="Categoria">${opts(aCats(),fA.cat,'Todas as categorias')}</select><select id="ast" aria-label="Estado">${opts(AST,fA.st,'Todos os estados')}</select><select id="asa" aria-label="Sala">${opts(uniq('sala'),fA.sala,'Todas as salas')}</select><select id="are" aria-label="Responsável">${opts(uniq('resp'),fA.resp,'Todos os responsáveis')}</select><label class="chk">Aquisição de <input type="date" id="afr" value="${fA.from||''}"></label><label class="chk">até <input type="date" id="ato" value="${fA.to||''}"></label><button class="btn" id="acl">Limpar</button></div>
+<div class="tw"><table><thead><tr><th>Código</th><th>Equipamento</th><th>Categoria</th><th>Localização</th><th>Responsável</th><th>Estado</th><th>Garantia</th><th></th></tr></thead><tbody id="atb"></tbody></table></div><div class="pgn"><span id="amore"></span></div></div>`;
+  [['acat','cat'],['ast','st'],['asa','sala'],['are','resp'],['afr','from'],['ato','to']].forEach(([i,k])=>$('#'+i).onchange=e=>{fA[k]=e.target.value;aTb()});
+  bindSearch($('#aq'),e=>{fA.q=e.target.value;aTb()});
+  $('#anw').onclick=()=>aform();$('#aex').onclick=()=>xl(aRows(aFil()),'patrimonio-filtrado');$('#acl').onclick=()=>{fA={};VIEWS.ast(m)};$('#aim').onclick=aImp;
+  $('#atb').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+    if(d.av)aview(d.av,'d');else if(d.ae)aform(d.ae);else if(d.ax){const a=aF(d.ax);if(!await askDel(`Mover ${a.code} para a lixeira?`,'Mover para a lixeira'))return;act('Excluiu patrimônio',a.code,a.name,a.id);assets=assets.filter(x=>x!==a);save();render();toast('Movido para a lixeira','ok',UNDO)}};
+  countUp(m);aTb()};
+function aTb(){const l=aFil(),t=$('#atb');if(!t)return;$('#ac2').textContent=`${l.length} de ${assets.length} equipamentos`;
+  t.innerHTML=l.slice(0,400).map(a=>`<tr><td class="mono"><button class="nm" data-av="${a.id}">${esc(a.code)}</button></td><td>${esc(a.name)}${a.serial?`<small class="ob">S/N ${esc(a.serial)}</small>`:''}</td><td>${catTag(a.cat)}</td><td>${esc(loc(a))}</td><td>${esc(a.resp||'—')}</td><td>${chip(a.status,ASC[a.status]||'#8b92a3')}</td><td>${wChip(a)}</td><td class="act"><button class="btn i" data-av="${a.id}" aria-label="Ficha e QR">${ic('qr')}</button> <button class="btn i" data-ae="${a.id}" aria-label="Editar">${ic('edit')}</button> <button class="btn i d" data-ax="${a.id}" aria-label="Excluir">${ic('tr')}</button></td></tr>`).join('')||`<tr><td colspan="8" class="empty">${assets.length?'Nenhum equipamento com esses filtros.':'Nenhum patrimônio cadastrado. Use Novo patrimônio ou importe seus computadores.'}</td></tr>`;
+  $('#amore').textContent=l.length>400?`Mostrando 400 de ${l.length}. Use os filtros para refinar.`:''}
+function aImp(){const n=cmp.filter(c=>!assets.some(a=>a.cid===c.id));if(!n.length)return toast('Todos os computadores já têm patrimônio');const cs=nextCodes('Computador',n.length);
+  n.forEach((c,k)=>assets.push({id:uid('a'),code:cs[k],cat:'Computador',name:c.nome,serial:'',status:c.status,sala:c.sala&&c.sala!=='VIRTUAL'?c.sala:'',lab:'',setor:'',arm:'',resp:c.col||'',buy:'',war:'',obs:[c.pat&&'Nº '+c.pat,c.obs].filter(Boolean).join(' · '),files:[],cid:c.id,created:Date.now()}));
+  act('Importou computadores',n.length+' máquinas');save();render();toast(n.length+' computadores importados','ok',UNDO)}
+function aform(id){const a=aF(id)||{cat:'Computador',name:'',serial:'',code:'',status:'Em estoque',sala:'',lab:'',setor:'',arm:'',resp:'',buy:'',war:'',obs:''};
+  const d=openDlg(`<h3>${id?'Editar '+esc(a.code):'Novo patrimônio'}</h3><div class="f2"><div class="fld"><label for="fc1">Categoria</label><input id="fc1" list="acl1" value="${esc(a.cat)}"><datalist id="acl1">${aCats().map(c=>`<option>${esc(c)}</option>`).join('')}</datalist></div>${inp('fn','Equipamento / modelo',a.name)}${inp('fs','Nº de série',a.serial)}${inp('fcd','Código',a.code,'text',`placeholder="${id?'':'Automático (PC-001, MON-002…)'}"`)}${id?'':inp('fq','Unidades iguais a cadastrar','1','number','min="1" max="200"')}${sel('fst','Estado',AST,a.status)}${inp('fsa','Sala',a.sala)}${inp('flb','Laboratório',a.lab)}${inp('fse','Setor',a.setor)}${inp('far','Armário',a.arm)}${inp('fre','Responsável',a.resp)}${inp('fby','Data de aquisição',a.buy,'date')}${inp('fwa','Fim da garantia',a.war,'date')}</div>${area('fob','Observações',a.obs)}${acts2('Salvar','asv')}`,true);
+  $('#asv').onclick=()=>{const v=i=>$('#'+i).value.trim(),n={cat:v('fc1'),name:v('fn'),serial:v('fs'),status:$('#fst').value,sala:v('fsa'),lab:v('flb'),setor:v('fse'),arm:v('far'),resp:v('fre'),buy:v('fby'),war:v('fwa'),obs:v('fob')};
+    if(!n.cat||!n.name)return toast('Preencha categoria e equipamento');const cd=v('fcd').toUpperCase();if(cd&&assets.some(x=>x.id!==id&&x.code.toUpperCase()===cd))return toast('O código '+cd+' já existe');
+    if(id){const ch=[];[['status','estado'],['sala','sala'],['lab','laboratório'],['setor','setor'],['arm','armário'],['resp','responsável'],['name','equipamento']].forEach(([k,l])=>{if((a[k]||'')!==n[k])ch.push(`${l}: ${a[k]||'—'} → ${n[k]||'—'}`)});if(cd&&cd!==a.code)ch.push(`código: ${a.code} → ${cd}`);Object.assign(a,n,{code:cd||a.code});act('Editou patrimônio',a.code,ch.join('; '),id)}
+    else{const q=Math.min(200,Math.max(1,Math.floor(+v('fq'))||1)),cs=q===1&&cd?[cd]:nextCodes(n.cat,q),ns=cs.map(c=>({id:uid('a'),code:c,...n,files:[],created:Date.now()}));assets.push(...ns);act('Cadastrou patrimônio',cs.length>1?`${cs[0]} … ${cs[cs.length-1]}`:cs[0],`${n.cat} · ${n.name}`,ns[0].id)}
+    save();d.close();render();toast('Patrimônio salvo','ok')}}
+/* anexos (IndexedDB) */
+let dbP=null;
+const idb=()=>dbP||(dbP=new Promise((ok,no)=>{const r=indexedDB.open('spbim-files',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>ok(r.result);r.onerror=()=>{dbP=null;no(r.error)}}));
+const fput=async(k,b)=>{const d=await idb();return new Promise((ok,no)=>{const t=d.transaction('f','readwrite');t.objectStore('f').put(b,k);t.oncomplete=ok;t.onerror=no})};
+const fget=async k=>{const d=await idb();return new Promise((ok,no)=>{const r=d.transaction('f').objectStore('f').get(k);r.onsuccess=()=>ok(r.result);r.onerror=no})};
+function aview(id,tab){const a=aF(id);if(!a)return toast('Patrimônio não encontrado');if(tab)tabA=tab;
+  const T=[['d','Dados'],['l','Empréstimos'],['m','Manutenção'],['f','Anexos'],['h','Histórico']],R=(l,v)=>`<div class="mv"><div><small>${l}</small>${esc(v||'—')}</div></div>`;
+  const LS=loans.filter(l=>l.aid===id).sort((x,y)=>y.out.localeCompare(x.out)),MS=maint.filter(x=>x.aid===id).sort((x,y)=>y.open.localeCompare(x.open));let b='';
+  if(tabA==='d')b=R('Categoria',a.cat)+R('Nº de série',a.serial)+R('Sala',a.sala)+R('Laboratório',a.lab)+R('Setor',a.setor)+R('Armário',a.arm)+R('Responsável',a.resp)+R('Aquisição',a.buy&&fd(a.buy))+R('Fim da garantia',a.war&&fd(a.war))+R('Observações',a.obs);
+  else if(tabA==='l')b=`<div class="dl"><button class="btn p" id="alo" ${['Emprestado','Em manutenção','Baixado'].includes(a.status)?'disabled':''}>${ic('key')}Emprestar</button></div>`+(LS.map(l=>`<div class="mv"><div>${esc(l.who)}<small>Retirou ${fd(l.out)} · previsão ${fd(l.due)} · ${l.ret?'devolvido '+fd(l.ret):'em aberto'}</small></div>${l.ret?'':`<button class="btn" data-lr="${l.id}">Devolver</button>`}</div>`).join('')||'<div class="empty sm">Nenhum empréstimo.</div>');
+  else if(tabA==='m')b=`<div class="dl"><button class="btn p" id="amo">${ic('wrench')}Registrar manutenção</button></div>`+(MS.map(x=>`<div class="mv"><div>${esc(x.prob)}<small>${fd(x.open)}${x.close?' → '+fd(x.close):' · em andamento'} · Técnico: ${esc(x.tech||'—')}${x.svc?' · Serviço: '+esc(x.svc):''}</small></div><button class="btn i" data-me="${x.id}" aria-label="Editar">${ic('edit')}</button></div>`).join('')||'<div class="empty sm">Sem histórico de manutenção.</div>');
+  else if(tabA==='f')b=`<div class="dl"><select id="fk" style="width:auto" aria-label="Tipo de anexo">${opts(['Foto','Nota fiscal','Garantia','Comprovante de manutenção','Outro'],'')}</select><button class="btn p" id="fup">${ic('up')}Anexar arquivo</button><input type="file" id="fin" class="hide" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"></div>`+((a.files||[]).map(f=>`<div class="fl">${f.type.startsWith('image/')?`<img class="thumb" data-fi="${f.id}" alt="">`:ic('box')}<div>${esc(f.name)}<small>${esc(f.kind)} · ${fdt(f.t)}</small></div><button class="btn i" data-fo="${f.id}" aria-label="Abrir">${ic('eye')}</button><button class="btn i d" data-fx="${f.id}" aria-label="Remover">${ic('tr')}</button></div>`).join('')||'<div class="empty sm">Nenhum anexo. Guarde fotos, notas fiscais, garantias e comprovantes.</div>');
+  else b=acts.filter(x=>x.ref===id).slice(0,30).map(actRow).join('')||'<div class="empty sm">Sem alterações registradas.</div>';
+  const d=openDlg(`<div class="hh"><div><h3>${esc(a.code)} · ${esc(a.name)}</h3>${chip(a.status,ASC[a.status]||'#8b92a3')} ${wChip(a)}</div><div class="qr">${qrSvg(selfUrl('a',id))}<small>${esc(a.code)}</small></div></div>${tabs(T,tabA,'at')}${b}<div class="acts"><button class="btn" data-close>Fechar</button><button class="btn p" id="he">${ic('edit')}Editar</button></div>`,true);
+  $$('[data-at]',d).forEach(x=>x.onclick=()=>aview(id,x.dataset.at));$('#he').onclick=()=>aform(id);
+  if($('#alo'))$('#alo').onclick=()=>lform(id);if($('#amo'))$('#amo').onclick=()=>mform(null,id);
+  $$('[data-lr]',d).forEach(x=>x.onclick=async()=>{if(await lret(x.dataset.lr))aview(id)});$$('[data-me]',d).forEach(x=>x.onclick=()=>mform(x.dataset.me,id));
+  if(tabA==='f'){$('#fup').onclick=()=>$('#fin').click();$('#fin').onchange=e=>aUp(id,e.target.files[0],$('#fk').value);
+    $$('[data-fi]',d).forEach(async im=>{try{im.src=URL.createObjectURL(await fget(im.dataset.fi))}catch(e){}});
+    $$('[data-fo]',d).forEach(x=>x.onclick=async()=>{try{window.open(URL.createObjectURL(await fget(x.dataset.fo)))}catch(e){toast('Arquivo indisponível')}});
+    $$('[data-fx]',d).forEach(x=>x.onclick=async()=>{if(!await askDel('Remover este anexo?','Remover'))return;const f=a.files.find(z=>z.id===x.dataset.fx);a.files=a.files.filter(z=>z!==f);act('Removeu anexo',a.code,f.name,id);save();aview(id)})}}
+async function aUp(id,f,kind){if(!f)return;const a=aF(id);
+  try{let b=f;if(f.type.startsWith('image/'))b=await new Promise((ok,no)=>{const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const s=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(ok,'image/jpeg',.8)};im.onerror=no;im.src=u});
+    if(b.size>15e6)return toast('Arquivo muito grande (máx. 15 MB)');const fid=uid('f');await fput(fid,b);(a.files=a.files||[]).push({id:fid,name:f.name,kind,type:b.type||f.type||'application/octet-stream',size:b.size,t:Date.now()});act('Anexou arquivo',a.code,kind+' · '+f.name,id);save();aview(id);toast('Arquivo anexado','ok')}
+  catch(e){toast('Não foi possível guardar o arquivo neste navegador')}}
+
+/* =====================================================================
+   INVENTÁRIO › EMPRÉSTIMOS
+   ===================================================================== */
+function lform(aid){const av=assets.filter(a=>!['Emprestado','Em manutenção','Baixado'].includes(a.status));if(!aid&&!av.length)return toast('Nenhum equipamento disponível para empréstimo');
+  const d=openDlg(`<h3>Novo empréstimo</h3>${aid?`<p class="hint" style="margin:0 0 12px">${esc(aC(aid))} · ${esc(aF(aid).name)}</p>`:`<div class="fld"><label for="la">Equipamento disponível</label><select id="la">${av.map(a=>`<option value="${a.id}">${esc(a.code)} — ${esc(a.name)}</option>`).join('')}</select></div>`}<div class="f2">${inp('lw','Quem retirou','')}${inp('lo','Data da retirada',tdy(),'date')}${inp('ld','Previsão de devolução','','date')}</div>${area('lb','Observações','')}${acts2('Registrar','lsv')}`,true);
+  $('#lsv').onclick=()=>{const id=aid||$('#la').value,w=$('#lw').value.trim(),o=$('#lo').value,dd=$('#ld').value;if(!w||!o||!dd)return toast('Informe quem retirou, a retirada e a previsão');if(dd<o)return toast('A previsão não pode ser antes da retirada');
+    const a=aF(id);loans.push({id:uid('l'),aid:id,who:w,out:o,due:dd,ret:null,prev:a.status,obs:$('#lb').value.trim()});a.status='Emprestado';act('Emprestou',a.code,`para ${w} · devolver até ${fd(dd)}`,id);save();d.close();render();toast('Empréstimo registrado','ok');if(aid)aview(aid,'l')}}
+async function lret(id){const l=loans.find(x=>x.id===id),a=aF(l.aid),r=await ask('Data da devolução',{ok:'Registrar devolução',input:{type:'date',value:tdy()}});if(!r)return false;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(r)||r<l.out){toast('Data inválida');return false}
+  l.ret=r;if(a&&a.status==='Emprestado')a.status=l.prev&&l.prev!=='Emprestado'?l.prev:'Em estoque';act('Devolução',aC(l.aid),`de ${l.who} em ${fd(r)}`,l.aid);save();render();toast('Devolução registrada','ok');return true}
+VIEWS.loan=m=>{const L=loans.filter(l=>tabL==='open'?!l.ret:tabL==='late'?lateLoan(l):true).sort((a,b)=>b.out.localeCompare(a.out));
+  m.innerHTML=`<div class="pg">${head('Empréstimos',`${loans.filter(l=>!l.ret).length} em aberto · ${loans.filter(lateLoan).length} atrasados`,`<button class="btn" id="lex">${ic('dn')}Exportar</button><button class="btn p" id="lnw">${ic('plus')}Novo empréstimo</button>`)}${tabs([['open','Em aberto'],['late','Atrasados'],['all','Histórico']],tabL,'lt')}<div class="tw"><table><thead><tr><th>Equipamento</th><th>Quem retirou</th><th>Retirada</th><th>Previsão</th><th>Devolução</th><th>Situação</th><th></th></tr></thead><tbody>${L.map(l=>`<tr><td><button class="nm" data-av="${l.aid}">${esc(aC(l.aid))}</button><small class="ob">${esc(aF(l.aid)?.name||'')}</small></td><td>${esc(l.who)}</td><td>${fd(l.out)}</td><td>${fd(l.due)}</td><td>${fd(l.ret)}</td><td>${l.ret?chip('Devolvido','#34d399'):lateLoan(l)?chip('Atrasado','#f87171'):chip('No prazo','#60a5fa')}</td><td class="act">${l.ret?'':`<button class="btn" data-lr="${l.id}">Devolver</button> `}<button class="btn i d" data-lx="${l.id}" aria-label="Excluir">${ic('tr')}</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nenhum empréstimo nesta lista.</td></tr>'}</tbody></table></div></div>`;
+  $$('[data-lt]',m).forEach(b=>b.onclick=()=>{tabL=b.dataset.lt;VIEWS.loan(m)});$('#lnw').onclick=()=>lform();$('#lex').onclick=()=>exp('loan');
+  m.querySelector('tbody').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+    if(d.av)aview(d.av,'d');else if(d.lr)lret(d.lr);else if(d.lx){const l=loans.find(x=>x.id===d.lx),a=aF(l.aid);if(!await askDel('Excluir este empréstimo?'))return;if(!l.ret&&a&&a.status==='Emprestado')a.status=l.prev||'Em estoque';act('Excluiu empréstimo',aC(l.aid),l.who,l.aid);loans=loans.filter(x=>x!==l);save();render();toast('Empréstimo movido para a lixeira','ok',UNDO)}}};
+
+/* =====================================================================
+   INVENTÁRIO › CONFERÊNCIA
+   ===================================================================== */
+VIEWS.chk=m=>{m.innerHTML=`<div class="pg">${head('Conferência','Confirme equipamentos no local ou compare uma nova contagem.')}${tabs([['chk','Conferência presencial'],['cmp','Comparar contagem']],tabC,'kt')}<div id="kb"></div></div>`;
+  $$('[data-kt]',m).forEach(b=>b.onclick=()=>{kStop();tabC=b.dataset.kt;VIEWS.chk(m)});tabC==='chk'?kChk():kCmp()};
+function kStop(){clearInterval(camT);camT=null;if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}}
+const kSc=()=>assets.filter(a=>a.status!=='Baixado'&&(!chkS.sala||a.sala===chkS.sala)).sort((x,y)=>cmpS(x.code,y.code)),kSv=()=>ls.set('bs3.chk',chkS);
+function kMark(a,on){if(on){chkS.found[a.id]=Date.now();chkS.start=chkS.start||Date.now()}else delete chkS.found[a.id];kSv();act(on?'Conferiu':'Desmarcou conferência',a.code,loc(a),a.id);save()}
+function kHit(v){v=v.trim();const x=v.match(/#a=(.+)$/),id=x?decodeURIComponent(x[1]):null,a=assets.find(z=>z.id===id||z.code.toUpperCase()===v.toUpperCase());if(!a)return toast('Não encontrado no cadastro: '+v);
+  kMark(a,true);toast(a.code+' encontrado'+(chkS.sala&&a.sala!==chkS.sala?' (cadastrado em: '+loc(a)+')':''),'ok');kList()}
+function kChk(){$('#kb').innerHTML=`<div class="panel"><div class="tools" style="margin:0"><select id="ksa" aria-label="Sala">${opts(uniq('sala'),chkS.sala,'Todas as salas')}</select><input id="kin" class="wd" placeholder="Digite ou bipe o código (PC-001) e Enter" autocomplete="off" aria-label="Código do equipamento">${'BarcodeDetector' in window?`<button class="btn" id="kcam">${ic('scan')}Escanear QR</button>`:''}<button class="btn" id="kex">${ic('dn')}Exportar faltantes</button><button class="btn d" id="krs">Reiniciar</button></div><video id="cam" class="hide" playsinline muted></video></div><div id="kl" style="margin-top:14px"></div>`;
+  $('#ksa').onchange=e=>{chkS.sala=e.target.value;kSv();kList()};
+  $('#kin').onkeydown=e=>{if(e.key==='Enter'&&e.target.value.trim()){kHit(e.target.value);e.target.value=''}};
+  $('#kex').onclick=()=>xl(aRows(kSc().filter(a=>!chkS.found[a.id])),'conferencia-faltantes');
+  $('#krs').onclick=async()=>{if(await askDel('Reiniciar a conferência? As marcações atuais serão apagadas.','Reiniciar')){chkS={found:{},sala:chkS.sala};kSv();kList()}};
+  if($('#kcam'))$('#kcam').onclick=async()=>{const b=$('#kcam');if(camS){kStop();$('#cam').classList.add('hide');b.innerHTML=ic('scan')+'Escanear QR';return}
+    try{camS=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('#cam');v.srcObject=camS;v.classList.remove('hide');await v.play();b.innerHTML=ic('x')+'Parar câmera';
+      const bd=new BarcodeDetector({formats:['qr_code']});let last='',lt2=0;
+      camT=setInterval(async()=>{if(document.hidden)return;try{const r=await bd.detect(v);if(r[0]&&(r[0].rawValue!==last||Date.now()-lt2>3000)){last=r[0].rawValue;lt2=Date.now();kHit(last)}}catch(e){}},400)}
+    catch(e){toast('Não foi possível abrir a câmera');kStop()}};
+  kList();$('#kin').focus()}
+function kList(){const sc=kSc(),f=sc.filter(a=>chkS.found[a.id]).length,kl=$('#kl');if(!kl)return;
+  kl.innerHTML=`<div class="panel"><b>${f} de ${sc.length}</b> encontrados${chkS.start?` <small class="hint">· iniciada em ${fdt(chkS.start)}</small>`:''}<div class="prog"><i style="width:${sc.length?f/sc.length*100:0}%"></i></div></div><div class="tw" style="margin-top:14px"><table><thead><tr><th>Código</th><th>Equipamento</th><th>Local cadastrado</th><th>Situação</th><th></th></tr></thead><tbody>${[...sc].sort((x,y)=>(!!chkS.found[x.id])-(!!chkS.found[y.id])).map(a=>`<tr><td class="mono">${esc(a.code)}</td><td>${esc(a.name)}</td><td>${esc(loc(a))}</td><td>${chkS.found[a.id]?chip('Encontrado '+fdt(chkS.found[a.id]),'#34d399'):chip('Não conferido','#8b92a3')}</td><td class="act"><button class="btn" data-kf="${a.id}">${chkS.found[a.id]?'Desfazer':'Encontrado'}</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum patrimônio neste filtro.</td></tr>'}</tbody></table></div>`;
+  kl.onclick=e=>{const b=e.target.closest('[data-kf]');if(b){kMark(aF(b.dataset.kf),!chkS.found[b.dataset.kf]);kList()}}}
+function kCmp(){const R=cmpR,c=t=>R.filter(r=>r.t===t).length,C={Faltando:'#f87171',Sobrando:'#fbbf24',Diferente:'#60a5fa'};
+  $('#kb').innerHTML=`<div class="panel"><p class="hint" style="margin:0 0 12px">Importe uma planilha (.xlsx/.csv) com a nova contagem. Com a coluna <b>Código</b> compara o patrimônio; com <b>Nome</b>, <b>Categoria</b> e <b>Quantidade</b> compara o estoque.</p><div class="tools" style="margin:0"><button class="btn p" id="cim">${ic('up')}Importar contagem</button><input type="file" id="cfi" accept=".xlsx,.xls,.csv" class="hide">${R?`<button class="btn" id="cxe">${ic('dn')}Exportar diferenças</button>`:''}</div></div>${R?`<div class="tiles" style="margin-top:14px">${Object.keys(C).map(k=>`<div class="tile"><span>${k}</span><b>${c(k)}</b></div>`).join('')}</div>${R.length?`<div class="tw"><table><thead><tr><th>Situação</th><th>Item</th><th>Detalhe</th></tr></thead><tbody>${R.map(r=>`<tr><td>${chip(r.t,C[r.t])}</td><td>${esc(r.a)}</td><td>${esc(r.b)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="panel empty">Tudo confere com o cadastro.</div>'}`:''}`;
+  $('#cim').onclick=()=>$('#cfi').click();if($('#cxe'))$('#cxe').onclick=()=>xl(R.map(r=>({Situação:r.t,Item:r.a,Detalhe:r.b})),'comparacao-inventario');
+  $('#cfi').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+    try{const rs=await readSheet(f),O=[];
+      if(rs.some(r=>col(r,'código','codigo'))){const seen=new Set();
+        rs.forEach(r=>{const cd=String(col(r,'código','codigo')).trim().toUpperCase();if(!cd)return;seen.add(cd);const a=assets.find(x=>x.code.toUpperCase()===cd);
+          if(!a)O.push({t:'Sobrando',a:cd,b:String(col(r,'equipamento','nome'))||'Não está no cadastro'});else{const s=String(col(r,'sala')).trim();if(s&&s!==a.sala)O.push({t:'Diferente',a:cd,b:`Sala no cadastro: ${a.sala||'—'} · na contagem: ${s}`})}});
+        assets.filter(a=>a.status!=='Baixado'&&!seen.has(a.code.toUpperCase())).forEach(a=>O.push({t:'Faltando',a:a.code,b:a.name+' · '+loc(a)}))}
+      else{const mp=new Map();rs.forEach(r=>{const n=String(col(r,'nome','item')).trim(),ct=String(col(r,'categoria')).trim();if(!n)return;const k=(n+'|'+ct).toLowerCase();mp.set(k,{n,c:ct,q:(mp.get(k)?.q||0)+Math.max(0,Math.floor(+col(r,'quantidade','qtd'))||0)})});
+        items.forEach(i=>{const k=(i.name+'|'+i.cat).toLowerCase(),x=mp.get(k);if(!x)O.push({t:'Faltando',a:i.name+' · '+i.cat,b:`Cadastro: ${i.qty} · não consta na contagem`});else{if(x.q!==i.qty)O.push({t:'Diferente',a:i.name+' · '+i.cat,b:`Cadastro: ${i.qty} · contagem: ${x.q}`});mp.delete(k)}});
+        mp.forEach(x=>O.push({t:'Sobrando',a:x.n+' · '+x.c,b:`Contagem: ${x.q} · não está no cadastro`}))}
+      cmpR=O;act('Comparou inventário',f.name,O.length+' divergências');save();kCmp()}
+    catch(x){toast('Não foi possível ler o arquivo')}}}
+
+/* =====================================================================
+   ALERTAS › MANUTENÇÃO E ESTOQUE BAIXO
+   ===================================================================== */
+VIEWS.man=m=>{const T=tabs([['old','Peças e máquinas'],['hist','Histórico de manutenção']],tabM,'mt');
+  if(tabM==='old'){const bad=items.filter(i=>i.status==='Com defeito'||i.status==='Em manutenção').sort((a,b)=>a.status.localeCompare(b.status)||cmpS(a.name,b.name)),cm=cmp.filter(c=>c.status==='Em manutenção');
+    m.innerHTML=`<div class="pg">${head('Manutenção','Equipamentos com defeito ou em manutenção.')}${T}
+<div class="tiles">${tile('Peças com defeito',sqty('Com defeito'),'alert','er')}${tile('Peças em manutenção',sqty('Em manutenção'),'wrench','wa')}${tile('Computadores em manutenção',cm.length,'pc')}</div>
+<div class="tw"><table><thead><tr><th>Item</th><th>Categoria</th><th>Qtde</th><th>Status</th><th>Observações</th><th></th></tr></thead><tbody>${bad.map(i=>`<tr><td>${esc(i.name)}</td><td>${catTag(i.cat)}</td><td>${i.qty}</td><td class="st">${stSel('s',i.id,i.status,STS,SC)}</td><td class="wrap">${esc(i.obs||'—')}</td><td class="act"><button class="btn i" data-e="${i.id}" aria-label="Editar">${ic('edit')}</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Nenhuma peça com defeito ou em manutenção.</td></tr>'}</tbody></table></div>
+${cm.length?`<h3 style="margin:22px 0 12px;font-size:14px">Computadores em manutenção</h3><div class="tw"><table><thead><tr><th>Patrimônio</th><th>Máquina</th><th>Colaborador</th><th>Observações</th><th>Status</th></tr></thead><tbody>${cm.map(c=>`<tr><td class="mono">${esc(c.pat||'—')}</td><td><button class="nm" data-cv="${c.id}">${esc(c.nome)}</button></td><td>${esc(c.col||'—')}</td><td class="wrap">${esc(c.obs||'—')}</td><td class="st">${stSel('cs',c.id,c.status,CST,CSC)}</td></tr>`).join('')}</tbody></table></div>`:''}</div>`;
+    m.onchange=e=>{const t=e.target,d=t.dataset;if(d.s){const it=items.find(i=>i.id===d.s),o=it.status;it.status=t.value;act('Alterou status',it.name,`${o} → ${t.value}`,it.id)}else if(d.cs){const c=cmp.find(x=>x.id===d.cs),o=c.status;c.status=t.value;act('Alterou status',c.nome,`${o} → ${t.value}`,c.id)}else return;save();render();toast('Status atualizado','ok')};
+    $$('[data-e]',m).forEach(b=>b.onclick=()=>form(b.dataset.e));$$('[data-cv]',m).forEach(b=>b.onclick=()=>cview(b.dataset.cv));countUp(m)}
+  else{const L=[...maint].sort((a,b)=>b.open.localeCompare(a.open));m.onchange=null;
+    m.innerHTML=`<div class="pg">${head('Manutenção','Problemas, técnicos e serviços por patrimônio.',`<button class="btn" id="mex">${ic('dn')}Exportar</button><button class="btn p" id="mnw">${ic('plus')}Registrar manutenção</button>`)}${T}<div class="tw"><table><thead><tr><th>Equipamento</th><th>Problema</th><th>Técnico</th><th>Abertura</th><th>Conclusão</th><th>Serviço realizado</th><th></th></tr></thead><tbody>${L.map(x=>`<tr><td><button class="nm" data-av="${x.aid}">${esc(aC(x.aid))}</button></td><td class="wrap">${esc(x.prob)}</td><td>${esc(x.tech||'—')}</td><td>${fd(x.open)}</td><td>${x.close?fd(x.close):chip('Em andamento','#fbbf24')}</td><td class="wrap">${esc(x.svc||'—')}</td><td class="act"><button class="btn i" data-me="${x.id}" aria-label="Editar">${ic('edit')}</button> <button class="btn i d" data-mx="${x.id}" aria-label="Excluir">${ic('tr')}</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty">Nenhuma manutenção registrada.</td></tr>'}</tbody></table></div></div>`;
+    $('#mnw').onclick=()=>mform();$('#mex').onclick=()=>exp('maint');
+    m.querySelector('tbody').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+      if(d.av)aview(d.av,'d');else if(d.me)mform(d.me);else if(d.mx){const x=maint.find(z=>z.id===d.mx);if(!await askDel('Excluir este registro de manutenção?'))return;act('Excluiu manutenção',aC(x.aid),x.prob.slice(0,60),x.aid);maint=maint.filter(z=>z!==x);save();render();toast('Registro movido para a lixeira','ok',UNDO)}}}
+  $$('[data-mt]',m).forEach(b=>b.onclick=()=>{tabM=b.dataset.mt;VIEWS.man(m)})};
+function mform(id,aid){const x=maint.find(z=>z.id===id)||{aid,prob:'',tech:'',open:tdy(),close:'',svc:''};if(!x.aid&&!assets.length)return toast('Cadastre um patrimônio antes');
+  const d=openDlg(`<h3>${id?'Editar manutenção':'Registrar manutenção'}</h3>${x.aid?`<p class="hint" style="margin:0 0 12px">${esc(aC(x.aid))} · ${esc(aF(x.aid)?.name||'')}</p>`:`<div class="fld"><label for="ma">Equipamento</label><select id="ma">${assets.map(a=>`<option value="${a.id}">${esc(a.code)} — ${esc(a.name)}</option>`).join('')}</select></div>`}${area('mp','Problema',x.prob)}<div class="f2">${inp('mt1','Técnico responsável',x.tech)}${inp('mo','Data de abertura',x.open,'date')}${inp('mc','Data de conclusão',x.close||'','date')}</div>${area('ms','Serviço realizado',x.svc)}${acts2('Salvar','msv')}`,true);
+  $('#msv').onclick=()=>{const a=aF(x.aid||$('#ma').value),n={prob:$('#mp').value.trim(),tech:$('#mt1').value.trim(),open:$('#mo').value,close:$('#mc').value,svc:$('#ms').value.trim()};
+    if(!a)return toast('Equipamento não encontrado');if(!n.prob||!n.open)return toast('Informe o problema e a data de abertura');if(n.close&&n.close<n.open)return toast('A conclusão não pode ser antes da abertura');
+    let r=x;if(id)Object.assign(x,n);else{r={id:uid('m'),aid:a.id,prev:a.status,...n};maint.push(r)}const op=maint.some(z=>z.aid===a.id&&!z.close);
+    if(op&&a.status!=='Em manutenção'&&a.status!=='Baixado'){r.prev=a.status;a.status='Em manutenção'}else if(!op&&a.status==='Em manutenção')a.status=r.prev&&r.prev!=='Em manutenção'?r.prev:'Em uso';
+    act(id?'Editou manutenção':'Registrou manutenção',a.code,n.prob.slice(0,60)+(n.close?' · concluída':''),a.id);save();d.close();render();toast('Manutenção salva','ok');if(aid)aview(aid,'m')}}
+VIEWS.low=m=>{const L=lowList(),z=items.filter(i=>i.qty===0);
+  m.innerHTML=`<div class="pg">${head('Estoque baixo','Categorias e itens que precisam de reposição.',`<label class="chk">Alertar até <input id="lm" type="number" min="0" value="${lowLim()}" style="width:70px"> unidades por categoria</label>`)}
+<div class="tw"><table><thead><tr><th>Categoria</th><th>Total em estoque</th><th>Itens cadastrados</th><th>Nível</th><th></th></tr></thead><tbody>${L.map(l=>`<tr><td>${catTag(l.c)}</td><td>${l.q} ${l.q===1?'unidade':'unidades'}</td><td>${l.n}</td><td>${l.q<=1?chip(l.q===0?'Zerado':'Crítico','#f87171'):chip('Baixo','#fbbf24')}</td><td class="act"><button class="btn" data-c="${esc(l.c)}">Ver itens</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhuma categoria abaixo do limite.</td></tr>'}</tbody></table></div>
+${z.length?`<h3 style="margin:22px 0 12px;font-size:14px">Itens sem estoque</h3><div class="tw"><table><thead><tr><th>Item</th><th>Categoria</th><th>Observações</th><th></th></tr></thead><tbody>${z.map(i=>`<tr><td>${esc(i.name)}</td><td>${esc(i.cat)}</td><td>${esc(i.obs||'—')}</td><td class="act"><button class="btn" data-e="${i.id}">Dar entrada</button></td></tr>`).join('')}</tbody></table></div>`:''}</div>`;
+  $('#lm').onchange=e=>{ls.set('bs2.low',Math.max(0,Math.floor(+e.target.value)||0));refreshBar();render()};
+  $$('[data-c]',m).forEach(b=>b.onclick=()=>{fc=b.dataset.c;q='';fsx='';flo=false;pgN=1;go2('inv')});$$('[data-e]',m).forEach(b=>b.onclick=()=>form(b.dataset.e))};
+
+/* =====================================================================
+   MOVIMENTAÇÕES E RELATÓRIOS
+   ===================================================================== */
+VIEWS.mov=m=>{const T=movTab;
+  m.innerHTML=`<div class="pg">${head(T==='mov'?'Movimentações':'Registro de atividades',T==='mov'?`${movs.length} registros`:`${acts.length} registros`,`<button class="btn" id="ex">${ic('dn')}Exportar</button>`)}
+${tabs([['mov','Entradas e saídas'],['act','Atividades']],T,'t')}
+<div class="tools"><input id="s" type="search" placeholder="Pesquisar" value="${esc(mq)}" aria-label="Pesquisar"></div>
+<div class="tw"><table><thead><tr>${T==='mov'?'<th>Data</th><th>Item</th><th>Categoria</th><th>Tipo</th><th>Variação</th><th>Saldo</th><th>Responsável</th>':'<th>Data</th><th>Responsável</th><th>Ação</th><th>Alvo</th><th>Detalhe</th>'}</tr></thead><tbody id="tb"></tbody></table></div><div class="pgn"><span id="mc"></span></div></div>`;
+  $$('[data-t]',m).forEach(b=>b.onclick=()=>{movTab=b.dataset.t;mq='';VIEWS.mov(m)});
+  $('#ex').onclick=()=>exp(T);
+  const r=()=>{mq=$('#s').value;const t=mq.toLowerCase(),src=T==='mov'?movs.filter(v=>!t||[v.item,v.cat,v.u,v.type].join(' ').toLowerCase().includes(t)):acts.filter(a=>!t||[a.a,a.w,a.d,a.u].join(' ').toLowerCase().includes(t)),v=src.slice(0,200);
+    $('#tb').innerHTML=v.map(x=>T==='mov'?`<tr><td>${fdt(x.t)}</td><td>${esc(x.item)}</td><td>${esc(x.cat)}</td><td>${chip(x.type,x.type==='Entrada'?'#34d399':'#f87171')}</td><td>${x.d>0?'+':''}${x.d}</td><td>${x.qty}</td><td>${esc(x.u)}</td></tr>`:`<tr><td>${fdt(x.t)}</td><td>${esc(x.u)}</td><td>${chip(x.a,actCol(x.a))}</td><td>${esc(x.w)}</td><td class="wrap">${esc(x.d||'—')}</td></tr>`).join('')||`<tr><td colspan="${T==='mov'?7:5}" class="empty">${T==='mov'?'Sem movimentações. Elas aparecem aqui quando uma quantidade muda.':'Sem atividades registradas ainda.'}</td></tr>`;
+    $('#mc').textContent=`Mostrando ${v.length} de ${src.length}`};
+  bindSearch($('#s'),r);r()};
+async function xlAll(){try{const X=await XL(),wb=X.utils.book_new(),add=(n,r)=>X.utils.book_append_sheet(wb,X.utils.json_to_sheet(r.length?r:[{Aviso:'Sem registros'}]),n);
+  add('Inventário',ROWS.inv());add('Computadores',ROWS.cmp());add('Periféricos',ROWS.per());add('Patrimônio',ROWS.ast());add('Empréstimos',ROWS.loan());add('Manutenções',ROWS.maint());add('Hardware',ROWS.hw());add('Movimentações',ROWS.mov());add('Atividades',ROWS.act());
+  X.writeFile(wb,'spbim-relatorio.xlsx')}catch(e){toast('Não foi possível carregar o módulo de Excel. Verifique a conexão.')}}
+function printReport(){const by=catAgg(),al=alerts(),now=new Date().toLocaleString('pt-BR');
+  const sc=c=>STS.map(s=>items.filter(i=>i.cat===c&&i.status===s).reduce((a,i)=>a+i.qty,0));
+  $('#prt').innerHTML=`<div class="ph"><img src="${LOGO}" alt=""><div><h1>Relatório de estoque</h1><p>SPBIM · ${now} · ${esc(user.name)}</p></div></div>
+<div class="ps"><div><b>${items.length}</b>Itens cadastrados</div><div><b>${total()}</b>Peças em estoque</div><div><b>${cmp.length}</b>Computadores</div><div><b>${al.length}</b>Alertas</div></div>
+<h2>Resumo por categoria</h2><table><thead><tr><th>Categoria</th><th>Itens</th><th>Peças</th>${STS.map(s=>`<th>${s}</th>`).join('')}</tr></thead><tbody>${by.map(b=>`<tr><td>${esc(b[0])}</td><td>${items.filter(i=>i.cat===b[0]).length}</td><td>${b[1]}</td>${sc(b[0]).map(n=>`<td>${n}</td>`).join('')}</tr>`).join('')}</tbody></table>
+<h2>Alertas</h2>${al.length?`<table><tbody>${al.map(a=>`<tr><td>${esc(a.t)}</td></tr>`).join('')}</tbody></table>`:'<p>Nenhum alerta.</p>'}
+<h2>Inventário completo</h2><table><thead><tr><th>Item</th><th>Categoria</th><th>Qtde</th><th>Status</th><th>Observações</th></tr></thead><tbody>${[...items].sort((a,b)=>cmpS(a.cat,b.cat)||cmpS(a.name,b.name)).map(i=>`<tr><td>${esc(i.name)}</td><td>${esc(i.cat)}</td><td>${i.qty}</td><td>${esc(i.status)}</td><td>${esc(i.obs||'')}</td></tr>`).join('')}</tbody></table>`;
+  act('Gerou relatório','PDF do estoque','');save();window.print()}
+VIEWS.rel=m=>{const tq=total(),by=catAgg(),mx=Math.max(1,...by.map(b=>b[1])),mo=movs.filter(v=>v.t>Date.now()-30*864e5).length;
+  m.innerHTML=`<div class="pg">${head('Relatórios','Gráficos e exportações.',`<button class="btn" id="rx">${ic('dn')}Excel completo</button><button class="btn p" id="rp">${ic('dn')}Gerar PDF</button>`)}
+<div class="tiles">${tile('Peças em estoque',tq,'inv')}${tile('Itens cadastrados',items.length,'box')}${tile('Computadores',cmp.length,'pc')}${tile('Movimentações (30 dias)',mo,'mv')}</div>
+<div class="grid2"><div class="panel"><h3>Peças por categoria</h3>${by.map(b=>`<div class="bar"><span>${esc(b[0])}</span><i style="width:${b[1]/mx*100}%"></i><em>${b[1]}</em></div>`).join('')}</div>
+<div class="panel"><h3>Estado das peças</h3>${STS.map(s=>`<div class="bar"><span>${s}</span><i style="width:${tq?sqty(s)/tq*100:0}%;background:${SC[s]}"></i><em>${sqty(s)}</em></div>`).join('')}</div></div>
+<div class="panel" style="margin-top:14px"><h3>Exportações rápidas</h3><div class="opt">${[['inv','Peças'],['cmp','Máquinas'],['per','Periféricos'],['ast','Patrimônio'],['loan','Empréstimos'],['maint','Manutenções'],['mov','Movimentações'],['act','Atividades']].map(x=>`<button class="btn" data-x="${x[0]}">${ic('dn')}${x[1]}</button>`).join('')}</div></div></div>`;
+  $('#rx').onclick=xlAll;$('#rp').onclick=printReport;$$('[data-x]',m).forEach(b=>b.onclick=()=>exp(b.dataset.x));countUp(m)};
+
+/* =====================================================================
+   CONFIGURAÇÕES › GERAL, USUÁRIOS E LIXEIRA
+   ===================================================================== */
+VIEWS.usr=m=>{if(!isAd()){m.innerHTML=`<div class="pg">${head('Usuários','Controle de acesso')}<div class="panel empty">Apenas administradores podem gerenciar usuários.</div></div>`;return}
+  const us=users();
+  m.innerHTML=`<div class="pg">${head('Usuários',`${us.length} ${us.length===1?'usuário':'usuários'} neste navegador`)}<div class="tw"><table><thead><tr><th>Nome de usuário</th><th>Perfil</th><th></th></tr></thead><tbody>${us.map(u=>`<tr><td>${esc(u.name)}${u.email===user.email?' <span class="tag">você</span>':''}</td><td><select data-r="${esc(u.email)}" style="width:auto" aria-label="Perfil de ${esc(u.name)}">${opts(ROLES,u.role)}</select></td><td class="act">${u.email===user.email?'':`<button class="btn i d" data-ux="${esc(u.email)}" aria-label="Remover">${ic('tr')}</button>`}</td></tr>`).join('')}</tbody></table></div><p class="hint">O acesso é só pelo nome de usuário, sem senha: quem digitar um nome entra com o perfil dele. Um nome novo cria um usuário Operador. Os usuários ficam salvos apenas neste navegador.</p></div>`;
+  $$('[data-r]',m).forEach(s=>s.onchange=()=>{const a=users(),u=a.find(x=>x.email===s.dataset.r);if(u.role==='Administrador'&&s.value!=='Administrador'&&a.filter(x=>x.role==='Administrador').length<2){toast('Mantenha ao menos um administrador');return VIEWS.usr(m)}
+    act('Alterou perfil',u.name,`${u.role} → ${s.value}`);u.role=s.value;ls.set('bs.users',a);if(u.email===user.email){user.role=s.value;ls.set('bs.sess',user)}save();render();toast('Perfil atualizado','ok')});
+  $$('[data-ux]',m).forEach(b=>b.onclick=async()=>{const a=users(),u=a.find(x=>x.email===b.dataset.ux);if(u.role==='Administrador'&&a.filter(x=>x.role==='Administrador').length<2)return toast('Mantenha ao menos um administrador');if(!await askDel(`Remover o usuário ${u.name}?`,'Remover'))return;ls.set('bs.users',a.filter(x=>x!==u));act('Removeu usuário',u.name,'');save();VIEWS.usr(m);toast('Usuário removido','ok')})};
+VIEWS.cfg=m=>{const th=document.documentElement.dataset.theme||'dark',sn=ls.get('bs2.snaps',[]);
+  m.innerHTML=`<div class="pg">${head('Configurações','Aparência, alertas e backup.')}<div class="set">
+<div class="panel"><h3>Aparência</h3><div class="opt"><button class="btn ${th==='dark'?'on':''}" data-th="dark">${ic('moon')}Escuro</button><button class="btn ${th==='light'?'on':''}" data-th="light">${ic('sun')}Claro</button></div></div>
+<div class="panel"><h3>Alertas de estoque</h3><div class="rowf"><span>Avisar quando uma categoria tiver até</span><span><input id="lm" type="number" min="0" value="${lowLim()}" style="width:80px" aria-label="Limite de estoque baixo"> unidades</span></div></div>
+<div class="panel"><h3>Backup</h3><div class="opt"><button class="btn p" id="bk">${ic('dn')}Baixar backup</button><button class="btn" id="rs">${ic('up')}Restaurar de arquivo</button><input type="file" id="rf" accept=".json" class="hide"></div>
+<h4 class="fh">Cópias automáticas (uma por dia, neste navegador)</h4>${sn.map((s,k)=>`<div class="rowf"><span>${fdt(s.t)} · ${s.d.items.length} itens${s.d.cmp?' · '+s.d.cmp.length+' máquinas':''}</span><button class="btn" data-sn="${k}">Restaurar</button></div>`).join('')||'<div class="empty sm">Nenhuma cópia ainda.</div>'}
+<p class="hint">O backup inclui peças, máquinas, periféricos, patrimônio, empréstimos, manutenções, histórico e lixeira. Os arquivos anexados ficam no armazenamento do navegador e não entram no backup.</p></div>
+<div class="panel"><h3>Dados</h3><div class="rowf"><span>Voltar ao inventário original de peças (apaga movimentações e atividades)</span><button class="btn d" id="rz">Restaurar original</button></div><p class="hint">${CLOUD_CFG?'Os dados ficam salvos no banco de dados (Supabase, acessado pela API do sistema) e são compartilhados com toda a equipe. Mesmo assim, baixe um backup de vez em quando.':'Os dados ficam salvos apenas neste navegador. Baixe um backup com frequência e guarde o arquivo em local seguro.'}</p></div></div></div>`;
+  $$('[data-th]',m).forEach(b=>b.onclick=()=>{theme(b.dataset.th);VIEWS.cfg(m)});
+  $('#lm').onchange=e=>{ls.set('bs2.low',Math.max(0,Math.floor(+e.target.value)||0));refreshBar();toast('Limite atualizado','ok')};
+  $('#bk').onclick=()=>{const b=new Blob([JSON.stringify({v:5,t:Date.now(),items,movs,per,cmp,acts,assets,loans,maint,trash,hw})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='spbim-backup-'+tdy()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);ls.set('bs5.lastbk',Date.now());toast('Backup baixado','ok')};
+  $('#rs').onclick=()=>$('#rf').click();
+  $('#rf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const d=JSON.parse(await f.text());if(!await askDel('Substituir todos os dados atuais pelo conteúdo deste backup?','Substituir'))return;applyData(d);act('Restaurou backup',f.name);save();render();toast('Backup restaurado','ok')}catch(x){toast('Arquivo de backup inválido')}};
+  $$('[data-sn]',m).forEach(b=>b.onclick=async()=>{const s=sn[+b.dataset.sn];if(!await askDel('Restaurar a cópia de '+fdt(s.t)+'? Os dados atuais serão substituídos.','Restaurar'))return;try{applyData(clone(s.d));act('Restaurou cópia automática',fdt(s.t));save();render();toast('Cópia restaurada','ok')}catch(x){toast('Não foi possível restaurar')}});
+  $('#rz').onclick=async()=>{if(!await askDel('Voltar ao inventário original? Movimentações e atividades serão apagadas.','Restaurar original'))return;items=clone(SEED);movs=[];acts=[];save();render();toast('Inventário original restaurado','ok',UNDO)}};
+const tName=t=>{const d=t.d;return t.k==='items'?d.name+' · '+d.cat:t.k==='cmp'||t.k==='hw'?d.nome:t.k==='per'?d.m:t.k==='assets'?d.code+' · '+d.name:t.k==='loans'?aC(d.aid)+' → '+d.who:aC(d.aid)+' · '+(d.prob||'').slice(0,40)};
+VIEWS.trash=m=>{m.innerHTML=`<div class="pg">${head('Lixeira e desfazer','Recupere registros excluídos e reverta alterações.',`<button class="btn" id="tlg">${ic('hist')}Registro de alterações</button><button class="btn p" id="tud" ${undoS.length?'':'disabled'}>${ic('undo')}Desfazer última</button>`)}
+<div class="panel" style="margin-bottom:14px"><h3>Alterações que podem ser desfeitas</h3>${undoS.slice(-8).reverse().map((u,k)=>`<div class="mv"><div>${esc(u.l)}<small>${k?'':'Próxima a ser desfeita · '}${fdt(u.t)}</small></div></div>`).join('')||'<div class="empty sm">Nada para desfazer nesta sessão.</div>'}<p class="hint">Desfazer restaura o estado anterior, inclusive itens excluídos e movimentações (atalho Ctrl+Z). Esta lista vale enquanto a página estiver aberta; o registro de alterações é permanente.</p></div>
+<div class="panel"><h3 style="display:flex;justify-content:space-between">Lixeira <button class="lnk" id="tem">Esvaziar</button></h3><div class="tw"><table><thead><tr><th>Tipo</th><th>Registro</th><th>Excluído em</th><th>Por</th><th></th></tr></thead><tbody>${trash.map((t,i)=>`<tr><td>${K[t.k]}</td><td>${esc(tName(t))}</td><td>${fdt(t.t)}</td><td>${esc(t.u)}</td><td class="act"><button class="btn" data-tr="${i}">Restaurar</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">A lixeira está vazia.</td></tr>'}</tbody></table></div></div></div>`;
+  $('#tud').onclick=doUndo;$('#tlg').onclick=()=>{movTab='act';go2('mov')};
+  $('#tem').onclick=async()=>{if(!trash.length)return;if(await askDel('Apagar definitivamente tudo da lixeira? Isso não pode ser desfeito.','Esvaziar')){trash=[];ls.set('bs3.trash',trash);VIEWS.trash(m);toast('Lixeira esvaziada','ok')}};
+  $$('[data-tr]',m).forEach(b=>b.onclick=()=>{const i=+b.dataset.tr,t=trash[i],C=COL();if(t.k==='assets'&&C.assets.some(a=>a.code===t.d.code))t.d.code=nextCodes(t.d.cat,1)[0];C[t.k].push(t.d);trash.splice(i,1);act('Restaurou da lixeira',tName(t),K[t.k],t.d.id);save();render();toast('Registro restaurado','ok')})};
+
+/* =====================================================================
+   EVENTOS GLOBAIS
+   ===================================================================== */
+function initUI(){
+  $$('.lm').forEach(i=>i.src=LOGO);
+  $('#out').innerHTML=ic('out')+'<span>Sair</span>';$('#tg').innerHTML=ic('menu')+'<span>Menu</span>';$('#mb').innerHTML=ic('menu');
+  $('#tb2').innerHTML=`<button class="btn i" id="und" aria-label="Desfazer" title="Desfazer (Ctrl+Z)">${ic('undo')}</button><button class="btn" id="srch" title="Busca geral">${ic('search')}<span>Buscar</span><kbd>Ctrl K</kbd></button><button class="btn i" id="thm" aria-label="Alternar tema"></button><button class="btn i" id="bell" aria-label="Notificações">${ic('bell')}<b id="bd" class="hide"></b></button>`;
+  theme(document.documentElement.dataset.theme||'dark');
+  $('#nav').onclick=e=>{const b=e.target.closest('[data-v]');if(b)go2(b.dataset.v)};
+  $('#gt').onclick=e=>{const b=e.target.closest('[data-gt]');if(b)go2(b.dataset.gt)};
+  $('#mn').addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go2(b.dataset.go)});
+  $('#out').onclick=logout;
+  const tgl=()=>{const A=$('#app');if(matchMedia('(max-width:860px)').matches)A.classList.toggle('open');else{A.classList.toggle('col');try{localStorage.setItem('bs.col',A.classList.contains('col')?'1':'')}catch(e){}}};
+  $('#tg').onclick=tgl;$('#mb').onclick=tgl;$('#ov').onclick=()=>$('#app').classList.remove('open');
+  $('#und').onclick=doUndo;$('#srch').onclick=pal;$('#thm').onclick=()=>theme(document.documentElement.dataset.theme==='light'?'dark':'light');
+  $('#bell').onclick=e=>{e.stopPropagation();const p=$('#np');if(p.classList.contains('hide')){bellDraw();p.classList.remove('hide')}else p.classList.add('hide')};
+  $('#np').onclick=e=>{const b=e.target.closest('[data-go]');if(b){$('#np').classList.add('hide');go2(b.dataset.go)}};
+  document.addEventListener('click',e=>{const p=$('#np');if(!p.classList.contains('hide')&&!p.contains(e.target))p.classList.add('hide')});
+  $('#dlg').addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeDlg()});
+  $('#av').onclick=()=>$('#avf').click();
+  $('#avf').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f||!user)return;const u=URL.createObjectURL(f),im=new Image();
+    im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d'),s=Math.min(im.width,im.height);x.drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,96,96);URL.revokeObjectURL(u);ls.set('bs.av.'+user.email,c.toDataURL('image/jpeg',.85));avatar();toast('Foto atualizada','ok')};
+    im.onerror=()=>{URL.revokeObjectURL(u);toast('Imagem inválida')};im.src=u};
+  $('#xq').oninput=e=>palRes(e.target.value);
+  $('#xq').onkeydown=e=>{if(e.key==='ArrowDown'){e.preventDefault();palS=Math.min(palI.length-1,palS+1);palDraw()}else if(e.key==='ArrowUp'){e.preventDefault();palS=Math.max(0,palS-1);palDraw()}else if(e.key==='Enter'){e.preventDefault();palGo(palS)}};
+  $('#xr').onclick=e=>{const p=e.target.closest('.pi');if(p)palGo(+p.dataset.k)};
+  document.addEventListener('keydown',e=>{const k=e.key.toLowerCase(),mod=e.ctrlKey||e.metaKey;
+    if(e.key==='Escape'){$('#app').classList.remove('open');$('#np').classList.add('hide')}
+    if(!user)return;
+    if(mod&&k==='k'){e.preventDefault();pal()}
+    else if(mod&&!e.shiftKey&&k==='z'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)&&!document.querySelector('dialog[open]')){e.preventDefault();doUndo()}});
+  window.addEventListener('hashchange',deepLink);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&camS&&view!=='chk')kStop()});
+}
+
+/* =====================================================================
+   INICIALIZAÇÃO
+   ===================================================================== */
+(function migrate(){let ch=false;
+  /* máquinas refeitas a partir da planilha INVENTARIO (aba Máquinas), uma única vez:
+     as máquinas antigas (que tinham duplicatas vindas das especificações) são guardadas
+     em bs6.cmpOld e substituídas pela lista nova */
+  if(!ls.get('bs6.mach',0)&&MACH.length){if(cmp.length)ls.set('bs6.cmpOld',cmp);const t=Date.now();
+    cmp=MACH.map((d,i)=>({id:'cm'+(t+i),created:t,obs:'',...d,sto:stoOf(d)}));
+    ls.set('bs6.mach',1);ls.set('bs4.mach',1);ls.set('bs5.specs',1);ch=true}
+  if(ch){ls.set('bs2.cmp',cmp)}})();
+$('#hm').textContent=items.length;$('#hp').textContent=total();
+lastS=ser();lastD=JSON.parse(lastS);lastA=acts[0]?acts[0].t:0;
+initUI();
+document.addEventListener('visibilitychange',()=>{if(!cloud.on)return;if(document.hidden){if(Object.keys(cloud.pend).length)cloudPush()}else cloudPoll()});
+(function boot(){
+  if(CLOUD_CFG){api('session').then(cloudStart).catch(()=>authUI());return}
+  const u=user&&users().find(x=>x.email===user.email);if(u)enter(u);else authUI()})();
+</script>
+</body>
+</html>

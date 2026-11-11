@@ -1,6 +1,10 @@
 -- =====================================================================
 -- SPBIM Inventário: banco de dados no Supabase
 -- Cole este arquivo inteiro no Supabase: SQL Editor > New query > Run
+-- (pode rodar de novo sem problema: ele atualiza o que já existe)
+--
+-- Arquitetura: navegador -> API (Vercel, pasta /api) -> Supabase.
+-- O navegador NÃO acessa a tabela. Só a API, com a chave secreta.
 -- =====================================================================
 
 -- Cada linha guarda uma "coleção" do sistema como JSON
@@ -9,15 +13,15 @@ create table if not exists public.inventario (
   chave          text primary key,
   dados          jsonb       not null,
   atualizado_em  timestamptz not null default now(),
-  atualizado_por uuid        default auth.uid()
+  atualizado_por uuid
 );
 
--- Atualiza a data e o autor a cada alteração
+-- Atualiza a data a cada alteração. O autor vem da API (que já conferiu o login).
 create or replace function public.inventario_touch()
 returns trigger language plpgsql as $$
 begin
-  new.atualizado_em  := now();
-  new.atualizado_por := auth.uid();
+  new.atualizado_em  := clock_timestamp();
+  new.atualizado_por := coalesce(auth.uid(), new.atualizado_por);
   return new;
 end $$;
 
@@ -26,25 +30,25 @@ create trigger inventario_touch
   before insert or update on public.inventario
   for each row execute function public.inventario_touch();
 
--- Permite que o site (via Data API) acesse a tabela; quem pode o quê é decidido pelas policies abaixo
-grant select, insert, update on public.inventario to authenticated;
-revoke all on public.inventario from anon;
+alter table public.inventario alter column atualizado_por drop default;
 
--- Segurança: só usuários logados (criados por você no painel) leem e gravam.
--- Visitantes anônimos não veem nada, mesmo tendo a chave pública do site.
+-- Usado pela atualização automática ("o que mudou desde...")
+create index if not exists inventario_atualizado_em on public.inventario (atualizado_em);
+
+-- Segurança: ninguém acessa a tabela pelo navegador, nem anônimo nem logado.
+-- A chave publishable sozinha não lê nem grava nada.
+-- Só a API (chave secreta / service_role) consegue, e ela confere o login antes.
+revoke all on public.inventario from anon, authenticated;
 alter table public.inventario enable row level security;
 
 drop policy if exists "logados leem"     on public.inventario;
 drop policy if exists "logados inserem"  on public.inventario;
 drop policy if exists "logados alteram"  on public.inventario;
+-- (sem policies = acesso negado para anon/authenticated; service_role ignora RLS)
 
-create policy "logados leem"    on public.inventario for select to authenticated using (true);
-create policy "logados inserem" on public.inventario for insert to authenticated with check (true);
-create policy "logados alteram" on public.inventario for update to authenticated using (true) with check (true);
-
--- Tempo real: quando um colega salva, a tela dos outros atualiza sozinha
+-- O tempo real do Supabase não é mais usado (o site consulta a API a cada 15 s).
 do $$
 begin
-  alter publication supabase_realtime add table public.inventario;
-exception when duplicate_object then null;
+  alter publication supabase_realtime drop table public.inventario;
+exception when others then null;
 end $$;
